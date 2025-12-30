@@ -88,3 +88,11 @@ export function getNext5Days(): Date[] {
   }
   return days;
 }
+
+/**
+ * Format time (HH:mm)
+ */
+export function formatTime(date: Date | string): string {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return format(dateObj, 'HH:mm', { locale: fr });
+}

@@ -8,6 +8,7 @@ import { ProfilePage } from './pages/ProfilePage';
 import { ExplorePage } from './pages/ExplorePage';
 import { TripDetailsPage } from './pages/TripDetailsPage';
 import { UpcomingTripPage } from './pages/UpcomingTripPage';
+import { LiveTripPage } from './pages/LiveTripPage';
 import { LoginPage, SignupPage, ForgotPasswordPage } from './pages/auth';
 import './index.css';
 
@@ -39,8 +40,9 @@ function App() {
             <Route path="/trips" element={<DashboardPage />} />
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/trips/:id" element={<TripDetailsPage />} />
-            <Route path="/trips/:id/prepare" element={<UpcomingTripPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
+                        <Route path="/trips/:id/prepare" element={<UpcomingTripPage />} />
+                        <Route path="/trips/:id/live" element={<LiveTripPage />} />
+                        <Route path="/profile" element={<ProfilePage />} />
             <Route path="/settings" element={<ProfilePage />} />
           </Route>
         </Routes>

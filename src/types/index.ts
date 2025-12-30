@@ -86,6 +86,18 @@ export interface Activity {
   points: number;
   role: string;
   description?: string;
+  duration?: number; // Duration in minutes
+  location?: {
+    name: string;
+    coordinates: {
+      lat: number;
+      lng: number;
+    };
+  };
+  assignedParticipants?: string[]; // User IDs
+  status?: 'upcoming' | 'active' | 'completed';
+  startedAt?: Date;
+  completedAt?: Date;
 }
 
 /**
@@ -511,6 +523,100 @@ export interface Notification {
   scheduledFor?: Date;
   sent: boolean;
   sentAt?: Date;
+}
+
+/**
+ * Challenge during a trip
+ */
+export interface Challenge {
+  id: string;
+  tripId: string;
+  name: string;
+  description: string;
+  objective: string;
+  targetValue: number;
+  currentValue: number;
+  points: number;
+  timeLimit?: number; // Minutes
+  startTime?: Date;
+  endTime?: Date;
+  completed: boolean;
+  participants: string[]; // User IDs who completed
+}
+
+/**
+ * Live trip participant status
+ */
+export type ParticipantStatus = 'active' | 'paused' | 'offline' | 'sos';
+
+/**
+ * Live trip participant
+ */
+export interface LiveParticipant {
+  userId: string;
+  userName: string;
+  avatarUrl?: string;
+  status: ParticipantStatus;
+  lastSeen: Date;
+  location?: {
+    lat: number;
+    lng: number;
+    timestamp: Date;
+    shared: boolean;
+  };
+}
+
+/**
+ * Trip photo
+ */
+export interface TripPhoto {
+  id: string;
+  tripId: string;
+  userId: string;
+  userName: string;
+  avatarUrl?: string;
+  url: string;
+  thumbnailUrl?: string;
+  caption?: string;
+  timestamp: Date;
+  likes: string[]; // User IDs
+  comments: TripPhotoComment[];
+  location?: {
+    lat: number;
+    lng: number;
+  };
+}
+
+/**
+ * Trip photo comment
+ */
+export interface TripPhotoComment {
+  id: string;
+  userId: string;
+  userName: string;
+  avatarUrl?: string;
+  content: string;
+  timestamp: Date;
+}
+
+/**
+ * Group message during trip
+ */
+export interface GroupMessage {
+  id: string;
+  tripId: string;
+  senderId: string;
+  senderName: string;
+  senderAvatar?: string;
+  content: string;
+  type: 'text' | 'photo' | 'location';
+  timestamp: Date;
+  isGuide: boolean;
+  location?: {
+    lat: number;
+    lng: number;
+  };
+  photoUrl?: string;
 }
 
 /**
