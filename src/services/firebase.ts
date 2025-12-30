@@ -12,8 +12,10 @@ import { initializeApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth } from 'firebase/auth';
 import { 
   getFirestore, 
-  enableIndexedDbPersistence, 
-  type Firestore 
+  initializeFirestore,
+  persistentLocalCache,
+  type Firestore,
+  type FirestoreSettings
 } from 'firebase/firestore';
 import { getStorage, type FirebaseStorage } from 'firebase/storage';
 import { getAnalytics, type Analytics as FirebaseAnalytics } from 'firebase/analytics';
@@ -70,22 +72,23 @@ export const auth: Auth = getAuth(app);
  * - Caching data locally in IndexedDB
  * - Syncing changes when connection is restored
  * - Enabling read/write operations while offline
+ * 
+ * Using the new FirestoreSettings.cache API instead of deprecated enableIndexedDbPersistence
  */
-export const db: Firestore = getFirestore(app);
+let db: Firestore;
 
-// Enable offline persistence for Firestore
-enableIndexedDbPersistence(db).catch((error: unknown) => {
-  const err = error as { code?: string; message?: string };
-  if (err.code === 'failed-precondition') {
-    // Multiple tabs open, persistence can only be enabled in one tab at a time
-    console.warn('Firestore persistence failed: Multiple tabs open');
-  } else if (err.code === 'unimplemented') {
-    // Browser doesn't support persistence
-    console.warn('Firestore persistence not available in this browser');
-  } else {
-    console.error('Error enabling Firestore persistence:', error);
-  }
-});
+try {
+  // Try to initialize with persistent cache (new API)
+  db = initializeFirestore(app, {
+    localCache: persistentLocalCache(),
+  } as FirestoreSettings);
+} catch (error) {
+  // Fallback to default Firestore if persistent cache fails
+  console.warn('Failed to initialize Firestore with persistent cache, using default:', error);
+  db = getFirestore(app);
+}
+
+export { db };
 
 /**
  * Initialize Firebase Storage with cache configuration

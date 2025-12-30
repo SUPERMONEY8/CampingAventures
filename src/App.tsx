@@ -15,6 +15,12 @@ import { TripReportPage } from './pages/TripReportPage';
 import { CommunityFeedPage } from './pages/CommunityFeedPage';
 import { AdminLayout } from './components/layout/AdminLayout';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
+import { AdminTripsPage } from './pages/admin/AdminTripsPage';
+import { AdminUsersPage } from './pages/admin/AdminUsersPage';
+import { AdminReviewsPage } from './pages/admin/AdminReviewsPage';
+import { AdminAnalyticsPage } from './pages/admin/AdminAnalyticsPage';
+import { AdminReportsPage } from './pages/admin/AdminReportsPage';
+import { AdminSettingsPage } from './pages/admin/AdminSettingsPage';
 import { UnauthorizedPage } from './pages/UnauthorizedPage';
 import { LoginPage, SignupPage, ForgotPasswordPage } from './pages/auth';
 import './index.css';
@@ -68,6 +74,12 @@ function App() {
                         }
                       >
                         <Route path="/admin" element={<AdminDashboardPage />} />
+                        <Route path="/admin/trips" element={<AdminTripsPage />} />
+                        <Route path="/admin/users" element={<AdminUsersPage />} />
+                        <Route path="/admin/reviews" element={<AdminReviewsPage />} />
+                        <Route path="/admin/analytics" element={<AdminAnalyticsPage />} />
+                        <Route path="/admin/reports" element={<AdminReportsPage />} />
+                        <Route path="/admin/settings" element={<AdminSettingsPage />} />
                       </Route>
         </Routes>
       </Router>

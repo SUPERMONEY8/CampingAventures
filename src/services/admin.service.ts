@@ -46,14 +46,14 @@ export async function getAdminKPIs(): Promise<AdminKPIs> {
     const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
     // Get revenue data
+    // Note: Removed orderBy to avoid index requirement - we'll sort in memory
     const tripsRef = collection(db, 'trips');
-    const completedTrips = await getDocs(
-      query(
-        tripsRef,
-        where('status', '==', 'completed'),
-        where('date', '>=', Timestamp.fromDate(thisMonth))
-      )
-    );
+    const allTripsSnapshot = await getDocs(tripsRef);
+    const completedTrips = allTripsSnapshot.docs.filter((doc) => {
+      const data = doc.data() as DocumentData;
+      const tripDate = data.date?.toDate ? data.date.toDate() : new Date(data.date);
+      return data.status === 'completed' && tripDate >= thisMonth;
+    });
 
     let currentRevenue = 0;
     let previousRevenue = 0;
@@ -65,15 +65,12 @@ export async function getAdminKPIs(): Promise<AdminKPIs> {
       currentRevenue += price * participants;
     });
 
-    // Get previous month revenue
-    const previousMonthTrips = await getDocs(
-      query(
-        tripsRef,
-        where('status', '==', 'completed'),
-        where('date', '>=', Timestamp.fromDate(lastMonth)),
-        where('date', '<', Timestamp.fromDate(thisMonth))
-      )
-    );
+    // Get previous month revenue - filter in memory to avoid index
+    const previousMonthTrips = allTripsSnapshot.docs.filter((doc) => {
+      const data = doc.data() as DocumentData;
+      const tripDate = data.date?.toDate ? data.date.toDate() : new Date(data.date);
+      return data.status === 'completed' && tripDate >= lastMonth && tripDate < thisMonth;
+    });
 
     previousMonthTrips.forEach((doc) => {
       const trip = doc.data() as DocumentData;
@@ -91,22 +88,21 @@ export async function getAdminKPIs(): Promise<AdminKPIs> {
     const allUsers = await getDocs(usersRef);
     const totalUsers = allUsers.size;
 
-    const newUsersThisMonth = await getDocs(
-      query(
-        usersRef,
-        where('createdAt', '>=', Timestamp.fromDate(thisMonth))
-      )
-    );
-    const newUsersCount = newUsersThisMonth.size;
+    // Filter users in memory to avoid index requirement
+    const allUsersSnapshot = await getDocs(usersRef);
+    const newUsersThisMonth = allUsersSnapshot.docs.filter((doc) => {
+      const data = doc.data() as DocumentData;
+      const createdAt = data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
+      return createdAt >= thisMonth;
+    });
+    const newUsersCount = newUsersThisMonth.length;
 
-    const previousMonthUsers = await getDocs(
-      query(
-        usersRef,
-        where('createdAt', '>=', Timestamp.fromDate(lastMonth)),
-        where('createdAt', '<', Timestamp.fromDate(thisMonth))
-      )
-    );
-    const previousUsersCount = previousMonthUsers.size;
+    const previousMonthUsers = allUsersSnapshot.docs.filter((doc) => {
+      const data = doc.data() as DocumentData;
+      const createdAt = data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
+      return createdAt >= lastMonth && createdAt < thisMonth;
+    });
+    const previousUsersCount = previousMonthUsers.length;
     const growthRate = previousUsersCount > 0
       ? ((newUsersCount - previousUsersCount) / previousUsersCount) * 100
       : 0;
@@ -116,14 +112,13 @@ export async function getAdminKPIs(): Promise<AdminKPIs> {
       query(tripsRef, where('status', '==', 'ongoing'))
     );
 
-    const upcomingTrips = await getDocs(
-      query(
-        tripsRef,
-        where('status', '==', 'upcoming'),
-        where('date', '>=', Timestamp.fromDate(thisMonth)),
-        where('date', '<', new Date(now.getFullYear(), now.getMonth() + 1, 1))
-      )
-    );
+    // Filter upcoming trips in memory
+    const upcomingTripsFiltered = allTripsSnapshot.docs.filter((doc) => {
+      const data = doc.data() as DocumentData;
+      const tripDate = data.date?.toDate ? data.date.toDate() : new Date(data.date);
+      const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+      return data.status === 'upcoming' && tripDate >= thisMonth && tripDate < nextMonth;
+    });
 
     // Calculate average fill rate
     let totalFillRate = 0;
@@ -184,7 +179,7 @@ export async function getAdminKPIs(): Promise<AdminKPIs> {
       },
       activeTrips: {
         ongoing: ongoingTrips.size,
-        upcomingThisMonth: upcomingTrips.size,
+        upcomingThisMonth: upcomingTripsFiltered.length,
         averageFillRate,
       },
       satisfaction: {
@@ -242,15 +237,13 @@ export async function getRevenueData(period: 'month' | 'week' | 'year' = 'month'
         periodEnd.setFullYear(periodEnd.getFullYear() + 1);
       }
 
-      // Get revenue for this period
-      const trips = await getDocs(
-        query(
-          tripsRef,
-          where('date', '>=', Timestamp.fromDate(periodStart)),
-          where('date', '<', Timestamp.fromDate(periodEnd)),
-          where('status', '==', 'completed')
-        )
-      );
+      // Get revenue for this period - filter in memory to avoid index
+      const allTripsSnapshot = await getDocs(tripsRef);
+      const trips = allTripsSnapshot.docs.filter((doc) => {
+        const data = doc.data() as DocumentData;
+        const tripDate = data.date?.toDate ? data.date.toDate() : new Date(data.date);
+        return data.status === 'completed' && tripDate >= periodStart && tripDate < periodEnd;
+      });
 
       let revenue = 0;
       trips.forEach((doc) => {
@@ -260,19 +253,18 @@ export async function getRevenueData(period: 'month' | 'week' | 'year' = 'month'
         revenue += price * participants;
       });
 
-      // Get registrations for this period
-      const users = await getDocs(
-        query(
-          usersRef,
-          where('createdAt', '>=', Timestamp.fromDate(periodStart)),
-          where('createdAt', '<', Timestamp.fromDate(periodEnd))
-        )
-      );
+      // Get registrations for this period - filter in memory
+      const allUsersSnapshot = await getDocs(usersRef);
+      const users = allUsersSnapshot.docs.filter((doc) => {
+        const data = doc.data() as DocumentData;
+        const createdAt = data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
+        return createdAt >= periodStart && createdAt < periodEnd;
+      });
 
       data.push({
         period: periodLabel,
         revenue,
-        registrations: users.size,
+        registrations: users.length,
       });
     }
 
@@ -395,9 +387,13 @@ export async function getAdminAlerts(): Promise<AdminAlert[]> {
   try {
     const alerts: AdminAlert[] = [];
 
-    // Check for active SOS alerts
+    // Check for active SOS alerts - filter in memory to avoid index
     const sosRef = collection(db, 'sosAlerts');
-    const activeSOS = await getDocs(query(sosRef, where('resolved', '==', false)));
+    const allSOSSnapshot = await getDocs(sosRef);
+    const activeSOS = allSOSSnapshot.docs.filter((doc) => {
+      const data = doc.data() as DocumentData;
+      return data.resolved === false;
+    });
     activeSOS.forEach((doc) => {
       const sos = doc.data() as DocumentData;
       alerts.push({
@@ -482,11 +478,18 @@ export async function getRecentActivities(limitCount: number = 20): Promise<Rece
   try {
     const activities: RecentActivity[] = [];
 
-    // Get recent registrations
+    // Get recent registrations - fetch all and sort in memory to avoid index
     const usersRef = collection(db, 'users');
-    const recentUsers = await getDocs(
-      query(usersRef, orderBy('createdAt', 'desc'), limit(limitCount))
-    );
+    const allUsersSnapshot = await getDocs(usersRef);
+    const recentUsers = allUsersSnapshot.docs
+      .sort((a, b) => {
+        const aData = a.data() as DocumentData;
+        const bData = b.data() as DocumentData;
+        const aDate = aData.createdAt?.toDate ? aData.createdAt.toDate() : new Date(aData.createdAt);
+        const bDate = bData.createdAt?.toDate ? bData.createdAt.toDate() : new Date(bData.createdAt);
+        return bDate.getTime() - aDate.getTime();
+      })
+      .slice(0, limitCount);
 
     recentUsers.forEach((doc) => {
       const user = doc.data() as DocumentData;
