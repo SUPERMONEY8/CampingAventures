@@ -1,0 +1,369 @@
+{
+  "title": "Randonnée dans les Aurès - Aventure Nature",
+  "date": "2025-01-06T00:00:00.000Z",
+  "endDate": "2025-01-09T00:00:00.000Z",
+  "duration": 3,
+  "location": {
+    "name": "Parc National des Aurès, Batna",
+    "coordinates": {
+      "lat": 35.3111,
+      "lng": 6.8444
+    }
+  },
+  "difficulty": "intermédiaire",
+  "maxParticipants": 12,
+  "participants": [
+    {
+      "userId": "guide1",
+      "userName": "Ahmed Benali",
+      "role": "guide",
+      "joinedAt": "2024-12-30T00:00:00.000Z"
+    },
+    {
+      "userId": "user1",
+      "userName": "Fatima Zohra",
+      "role": "participant",
+      "joinedAt": "2024-12-28T00:00:00.000Z"
+    },
+    {
+      "userId": "user2",
+      "userName": "Mohamed Amine",
+      "role": "participant",
+      "joinedAt": "2024-12-29T00:00:00.000Z"
+    }
+  ],
+  "status": "upcoming",
+  "description": "Découvrez la beauté sauvage des Aurès lors de cette randonnée de 3 jours à travers les montagnes et les vallées verdoyantes.",
+  "longDescription": "Cette aventure de 3 jours vous emmènera à travers les paysages époustouflants du Parc National des Aurès, l'une des régions les plus spectaculaires d'Algérie.\n\nJour après jour, vous découvrirez des panoramas à couper le souffle, des cascades cristallines, et une faune et flore exceptionnelles. Notre guide expérimenté vous accompagnera tout au long du parcours, partageant ses connaissances sur l'histoire et la géologie de la région.\n\nLe soir, nous installerons notre campement dans des sites présélectionnés offrant des vues imprenables sur les montagnes. Autour du feu de camp, vous pourrez déguster des plats traditionnels préparés avec des ingrédients locaux.\n\nCette expérience est parfaite pour les amateurs de nature et de photographie, ainsi que pour ceux qui cherchent à se déconnecter du quotidien et à se reconnecter avec la nature.",
+  "price": 15000,
+  "accommodation": "tente",
+  "meals": ["Petit-déjeuner", "Déjeuner", "Dîner"],
+  "included": [
+    "Transport aller-retour depuis Batna",
+    "Guide expérimenté",
+    "Tentes et matériel de camping",
+    "Tous les repas",
+    "Eau potable",
+    "Assurance de base"
+  ],
+  "notIncluded": [
+    "Équipement personnel (sac de couchage, vêtements)",
+    "Boissons alcoolisées",
+    "Dépenses personnelles",
+    "Pourboires (optionnel)"
+  ],
+  "highlights": [
+    "Vues panoramiques sur les montagnes des Aurès",
+    "Observation de la faune locale (mouflons, aigles)",
+    "Photographie de paysages exceptionnels",
+    "Nuits sous les étoiles",
+    "Rencontre avec la culture locale"
+  ],
+  "meetingPoint": {
+    "name": "Gare routière de Batna",
+    "address": "Avenue de la Gare, Batna 05000",
+    "coordinates": {
+      "lat": 35.5556,
+      "lng": 6.1744
+    },
+    "time": "07:00",
+    "notes": "Rendez-vous devant l'entrée principale. Le bus partira à 7h30 précises."
+  },
+  "images": [
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200",
+    "https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=1200",
+    "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1200",
+    "https://images.unsplash.com/photo-1464822759844-d150ad8496e5?w=1200"
+  ],
+  "itinerary": [
+    {
+      "day": 1,
+      "date": "2025-01-06T00:00:00.000Z",
+      "description": "Départ et première randonnée vers le camp de base",
+      "activities": [
+        {
+          "id": "act1",
+          "tripId": "",
+          "name": "Départ de Batna",
+          "time": "2025-01-06T07:00:00.000Z",
+          "type": "hiking",
+          "points": 10,
+          "role": "participant",
+          "description": "Rassemblement et départ en bus vers le point de départ de la randonnée"
+        },
+        {
+          "id": "act2",
+          "tripId": "",
+          "name": "Randonnée vers le camp de base",
+          "time": "2025-01-06T09:00:00.000Z",
+          "type": "hiking",
+          "points": 50,
+          "role": "participant",
+          "description": "Randonnée de 4 heures à travers les vallées, pause déjeuner en chemin"
+        },
+        {
+          "id": "act3",
+          "tripId": "",
+          "name": "Installation du campement",
+          "time": "2025-01-06T16:00:00.000Z",
+          "type": "camping",
+          "points": 20,
+          "role": "participant",
+          "description": "Montage des tentes et préparation du dîner autour du feu"
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "date": "2025-01-07T00:00:00.000Z",
+      "description": "Journée complète d'exploration et de photographie",
+      "activities": [
+        {
+          "id": "act4",
+          "tripId": "",
+          "name": "Lever de soleil et petit-déjeuner",
+          "time": "2025-01-07T06:00:00.000Z",
+          "type": "social",
+          "points": 10,
+          "role": "participant",
+          "description": "Observation du lever de soleil et petit-déjeuner en plein air"
+        },
+        {
+          "id": "act5",
+          "tripId": "",
+          "name": "Randonnée vers le sommet",
+          "time": "2025-01-07T08:00:00.000Z",
+          "type": "hiking",
+          "points": 100,
+          "role": "participant",
+          "description": "Ascension vers le point culminant de la journée, vue panoramique à 1800m"
+        },
+        {
+          "id": "act6",
+          "tripId": "",
+          "name": "Session photo",
+          "time": "2025-01-07T12:00:00.000Z",
+          "type": "photography",
+          "points": 30,
+          "role": "participant",
+          "description": "Pause pour photographier les paysages et la faune"
+        },
+        {
+          "id": "act7",
+          "tripId": "",
+          "name": "Retour au camp et soirée",
+          "time": "2025-01-07T17:00:00.000Z",
+          "type": "social",
+          "points": 20,
+          "role": "participant",
+          "description": "Dîner traditionnel et partage d'expériences autour du feu"
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "date": "2025-01-08T00:00:00.000Z",
+      "description": "Dernière randonnée et retour",
+      "activities": [
+        {
+          "id": "act8",
+          "tripId": "",
+          "name": "Randonnée matinale",
+          "time": "2025-01-08T07:00:00.000Z",
+          "type": "hiking",
+          "points": 50,
+          "role": "participant",
+          "description": "Dernière randonnée vers une cascade cachée"
+        },
+        {
+          "id": "act9",
+          "tripId": "",
+          "name": "Déjeuner et départ",
+          "time": "2025-01-08T13:00:00.000Z",
+          "type": "social",
+          "points": 10,
+          "role": "participant",
+          "description": "Dernier repas ensemble et retour vers Batna"
+        }
+      ]
+    }
+  ],
+  "equipment": [
+    {
+      "id": "eq1",
+      "name": "Sac à dos (40-60L)",
+      "category": "gear",
+      "required": true,
+      "description": "Sac à dos confortable avec système de répartition de charge"
+    },
+    {
+      "id": "eq2",
+      "name": "Sac de couchage",
+      "category": "gear",
+      "required": true,
+      "description": "Température de confort -5°C minimum"
+    },
+    {
+      "id": "eq3",
+      "name": "Matelas de sol",
+      "category": "gear",
+      "required": true,
+      "description": "Matelas isolant pour le confort"
+    },
+    {
+      "id": "eq4",
+      "name": "Chaussures de randonnée",
+      "category": "clothing",
+      "required": true,
+      "description": "Chaussures montantes avec semelle anti-dérapante"
+    },
+    {
+      "id": "eq5",
+      "name": "Vêtements chauds",
+      "category": "clothing",
+      "required": true,
+      "description": "Pull, veste polaire, bonnet, gants"
+    },
+    {
+      "id": "eq6",
+      "name": "Vêtements de pluie",
+      "category": "clothing",
+      "required": false,
+      "description": "Veste et pantalon imperméables"
+    },
+    {
+      "id": "eq7",
+      "name": "Lampe frontale",
+      "category": "gear",
+      "required": true,
+      "description": "Avec piles de rechange"
+    },
+    {
+      "id": "eq8",
+      "name": "Gourde (2L minimum)",
+      "category": "gear",
+      "required": true,
+      "description": "Gourde ou camelbak"
+    },
+    {
+      "id": "eq9",
+      "name": "Trousse de secours",
+      "category": "safety",
+      "required": true,
+      "description": "Basique avec pansements, désinfectant, etc."
+    },
+    {
+      "id": "eq10",
+      "name": "Crème solaire",
+      "category": "safety",
+      "required": true,
+      "description": "SPF 50+"
+    },
+    {
+      "id": "eq11",
+      "name": "En-cas énergétiques",
+      "category": "food",
+      "required": false,
+      "description": "Barres énergétiques, fruits secs, noix"
+    }
+  ],
+  "weatherForecast": [
+    {
+      "date": "2025-01-06T00:00:00.000Z",
+      "temperature": { "min": 8, "max": 22 },
+      "condition": "sunny",
+      "icon": "sunny",
+      "advice": "Parfait pour la randonnée, n'oubliez pas la crème solaire"
+    },
+    {
+      "date": "2025-01-07T00:00:00.000Z",
+      "temperature": { "min": 10, "max": 24 },
+      "condition": "cloudy",
+      "icon": "cloudy",
+      "advice": "Nuages occasionnels, conditions idéales"
+    },
+    {
+      "date": "2025-01-08T00:00:00.000Z",
+      "temperature": { "min": 9, "max": 20 },
+      "condition": "sunny",
+      "icon": "sunny",
+      "advice": "Beau temps prévu, journée parfaite"
+    },
+    {
+      "date": "2025-01-09T00:00:00.000Z",
+      "temperature": { "min": 7, "max": 18 },
+      "condition": "cloudy",
+      "icon": "cloudy",
+      "advice": "Légère baisse de température"
+    },
+    {
+      "date": "2025-01-10T00:00:00.000Z",
+      "temperature": { "min": 6, "max": 16 },
+      "condition": "rainy",
+      "icon": "rainy",
+      "advice": "Pluie possible, prévoir vêtements imperméables"
+    },
+    {
+      "date": "2025-01-11T00:00:00.000Z",
+      "temperature": { "min": 8, "max": 19 },
+      "condition": "sunny",
+      "icon": "sunny",
+      "advice": "Retour du beau temps"
+    },
+    {
+      "date": "2025-01-12T00:00:00.000Z",
+      "temperature": { "min": 9, "max": 21 },
+      "condition": "sunny",
+      "icon": "sunny",
+      "advice": "Conditions optimales"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "rev1",
+      "userId": "user3",
+      "userName": "Sarah Khelil",
+      "userAvatar": "https://i.pravatar.cc/150?img=1",
+      "rating": 5,
+      "comment": "Une expérience inoubliable ! Les paysages sont à couper le souffle et notre guide Ahmed était exceptionnel. Je recommande vivement cette sortie.",
+      "date": "2024-12-01T00:00:00.000Z",
+      "photos": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=800"
+      ]
+    },
+    {
+      "id": "rev2",
+      "userId": "user4",
+      "userName": "Karim Bensaid",
+      "rating": 4,
+      "comment": "Très belle randonnée, bien organisée. Le seul point négatif est que 3 jours passent trop vite !",
+      "date": "2024-12-15T00:00:00.000Z"
+    },
+    {
+      "id": "rev3",
+      "userId": "user5",
+      "userName": "Amina Cherif",
+      "userAvatar": "https://i.pravatar.cc/150?img=5",
+      "rating": 5,
+      "comment": "Parfait pour les amateurs de nature et de photographie. Les repas étaient délicieux et le groupe était super sympa.",
+      "date": "2024-12-20T00:00:00.000Z",
+      "photos": [
+        "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800"
+      ]
+    },
+    {
+      "id": "rev4",
+      "userId": "user6",
+      "userName": "Youssef Amrani",
+      "rating": 4,
+      "comment": "Bonne expérience globale. Le niveau était adapté pour un intermédiaire comme moi.",
+      "date": "2024-12-25T00:00:00.000Z"
+    }
+  ],
+  "averageRating": 4.5,
+  "totalReviews": 4,
+  "createdAt": "2024-12-30T00:00:00.000Z",
+  "updatedAt": "2024-12-30T00:00:00.000Z"
+}
+
