@@ -98,6 +98,7 @@ export function ProtectedRoute({
 
   // Redirect to login if not authenticated
   if (!user) {
+    console.log('❌ ProtectedRoute: User is null - redirecting to login');
     return (
       <Navigate
         to={redirectTo}
@@ -109,12 +110,22 @@ export function ProtectedRoute({
 
   // Check role-based access if required
   if (requiredRole) {
+    console.log('🔍 ProtectedRoute: Checking role access');
+    console.log('🔍 User object:', user);
+    console.log('🔍 User role from object:', (user as any).role);
+    console.log('🔍 User email:', (user as any).email);
+    
     const userRole = getUserRole(user as unknown as { id: string; [key: string]: unknown });
+    console.log('🔍 Detected role:', userRole);
+    console.log('🔍 Required role:', requiredRole);
+    
     const allowedRoles = Array.isArray(requiredRole)
       ? requiredRole
       : [requiredRole];
 
     if (!userRole || !allowedRoles.includes(userRole)) {
+      console.log('❌ ProtectedRoute: User does not have required role');
+      console.log('❌ User role:', userRole, 'Required:', allowedRoles);
       // User doesn't have required role, redirect to unauthorized page or home
       return (
         <Navigate
@@ -124,6 +135,8 @@ export function ProtectedRoute({
         />
       );
     }
+    
+    console.log('✅ ProtectedRoute: User has required role, allowing access');
   }
 
   // User is authenticated and has required role (if any)
@@ -141,25 +154,34 @@ export function ProtectedRoute({
  * @returns User role or null if not found
  */
 function getUserRole(user: { id: string; [key: string]: unknown }): UserRole | null {
+  console.log('🔍 getUserRole: Checking user object', user);
+  
   // Check if user has a role property
   if ('role' in user && typeof user.role === 'string') {
     const role = user.role as string;
+    console.log('🔍 getUserRole: Found role property:', role);
     if (role === 'user' || role === 'admin' || role === 'ceo') {
+      console.log('✅ getUserRole: Valid role found:', role);
       return role as UserRole;
     }
+    console.log('⚠️ getUserRole: Invalid role value:', role);
+  } else {
+    console.log('⚠️ getUserRole: No role property found or not a string');
   }
 
   // Temporary: Check if user email contains 'admin' for testing
   // In production, this should come from Firestore user document
   if ('email' in user && typeof user.email === 'string') {
     const email = user.email.toLowerCase();
+    console.log('🔍 getUserRole: Checking email:', email);
     if (email.includes('admin') || email === 'admin@camping-aventures.com') {
+      console.log('✅ getUserRole: Admin email detected');
       return 'admin';
     }
   }
 
   // Default to 'user' role if no role is specified
-  // You can modify this logic based on your requirements
+  console.log('⚠️ getUserRole: Defaulting to user role');
   return 'user';
 }
 

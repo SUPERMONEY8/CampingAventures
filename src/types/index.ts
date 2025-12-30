@@ -48,6 +48,7 @@ export interface User {
   history: TripHistoryEntry[];
   avatarUrl?: string;
   medicalInfo?: MedicalInfo;
+  role?: 'user' | 'admin' | 'ceo';
 }
 
 // ============================================================================
