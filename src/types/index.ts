@@ -694,6 +694,111 @@ export interface TripReport {
 }
 
 /**
+ * Admin dashboard KPIs
+ */
+export interface AdminKPIs {
+  revenue: {
+    current: number;
+    previous: number;
+    change: number; // percentage
+    trend: number[]; // last 7 days
+  };
+  activeUsers: {
+    total: number;
+    newThisMonth: number;
+    growthRate: number; // percentage
+  };
+  activeTrips: {
+    ongoing: number;
+    upcomingThisMonth: number;
+    averageFillRate: number; // percentage
+  };
+  satisfaction: {
+    average: number;
+    change: number; // percentage
+    totalRatings: number;
+  };
+}
+
+/**
+ * Revenue and registrations data point
+ */
+export interface RevenueDataPoint {
+  period: string; // "2024-01" or "2024-W01"
+  revenue: number;
+  registrations: number;
+}
+
+/**
+ * Trip status distribution
+ */
+export interface TripStatusDistribution {
+  completed: number;
+  ongoing: number;
+  upcoming: number;
+  cancelled: number;
+}
+
+/**
+ * Trip satisfaction data
+ */
+export interface TripSatisfaction {
+  tripId: string;
+  tripTitle: string;
+  averageRating: number;
+  totalRatings: number;
+}
+
+/**
+ * User growth data point
+ */
+export interface UserGrowthDataPoint {
+  date: Date;
+  totalUsers: number;
+  newUsers: number;
+  event?: string; // Optional event marker
+}
+
+/**
+ * Admin alert
+ */
+export interface AdminAlert {
+  id: string;
+  type: 'sos' | 'underbooked' | 'negative_review' | 'pending_payment' | 'other';
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  title: string;
+  message: string;
+  tripId?: string;
+  userId?: string;
+  timestamp: Date;
+  resolved: boolean;
+}
+
+/**
+ * Recent activity
+ */
+export interface RecentActivity {
+  id: string;
+  type: 'registration' | 'trip_completed' | 'review_published' | 'payment_received' | 'trip_created' | 'user_joined';
+  title: string;
+  description: string;
+  userId?: string;
+  tripId?: string;
+  timestamp: Date;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * Quick stats
+ */
+export interface QuickStats {
+  conversionRate: number; // percentage
+  averageRevenuePerTrip: number;
+  retentionRate: number; // percentage
+  npsScore: number; // -100 to 100
+}
+
+/**
  * Notification types
  */
 export type NotificationType =

@@ -12,6 +12,8 @@ import { LiveTripPage } from './pages/LiveTripPage';
 import { SOSPage } from './pages/SOSPage';
 import { TripReportPage } from './pages/TripReportPage';
 import { CommunityFeedPage } from './pages/CommunityFeedPage';
+import { AdminLayout } from './components/layout/AdminLayout';
+import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { LoginPage, SignupPage, ForgotPasswordPage } from './pages/auth';
 import './index.css';
 
@@ -50,8 +52,19 @@ function App() {
                         <Route path="/community" element={<CommunityFeedPage />} />
                         <Route path="/feed" element={<CommunityFeedPage />} />
                         <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/settings" element={<ProfilePage />} />
-          </Route>
+                        <Route path="/settings" element={<ProfilePage />} />
+                      </Route>
+
+                      {/* Admin routes with AdminLayout */}
+                      <Route
+                        element={
+                          <ProtectedRoute requiredRole="admin">
+                            <AdminLayout />
+                          </ProtectedRoute>
+                        }
+                      >
+                        <Route path="/admin" element={<AdminDashboardPage />} />
+                      </Route>
         </Routes>
       </Router>
     </AuthProvider>
