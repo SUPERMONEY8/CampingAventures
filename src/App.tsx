@@ -3,7 +3,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { MainLayout } from './components/layout';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Home } from './pages/Home';
-import { Dashboard } from './pages/Dashboard';
+import { DashboardPage } from './pages/DashboardPage';
 import { LoginPage, SignupPage, ForgotPasswordPage } from './pages/auth';
 import './index.css';
 
@@ -26,11 +26,11 @@ function App() {
             }
           >
             <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/trips" element={<Dashboard />} />
-            <Route path="/explore" element={<Dashboard />} />
-            <Route path="/profile" element={<Dashboard />} />
-            <Route path="/settings" element={<Dashboard />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/trips" element={<DashboardPage />} />
+            <Route path="/explore" element={<DashboardPage />} />
+            <Route path="/profile" element={<DashboardPage />} />
+            <Route path="/settings" element={<DashboardPage />} />
           </Route>
         </Routes>
       </Router>
