@@ -149,6 +149,15 @@ function getUserRole(user: { id: string; [key: string]: unknown }): UserRole | n
     }
   }
 
+  // Temporary: Check if user email contains 'admin' for testing
+  // In production, this should come from Firestore user document
+  if ('email' in user && typeof user.email === 'string') {
+    const email = user.email.toLowerCase();
+    if (email.includes('admin') || email === 'admin@camping-aventures.com') {
+      return 'admin';
+    }
+  }
+
   // Default to 'user' role if no role is specified
   // You can modify this logic based on your requirements
   return 'user';

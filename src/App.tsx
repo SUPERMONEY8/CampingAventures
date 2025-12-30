@@ -14,6 +14,7 @@ import { TripReportPage } from './pages/TripReportPage';
 import { CommunityFeedPage } from './pages/CommunityFeedPage';
 import { AdminLayout } from './components/layout/AdminLayout';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
+import { UnauthorizedPage } from './pages/UnauthorizedPage';
 import { LoginPage, SignupPage, ForgotPasswordPage } from './pages/auth';
 import './index.css';
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/unauthorized" element={<UnauthorizedPage />} />
           
           {/* Public routes - Long paths (redirect to short paths) */}
           <Route path="/auth/login" element={<Navigate to="/login" replace />} />
