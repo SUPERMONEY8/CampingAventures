@@ -10,6 +10,7 @@ import { TripDetailsPage } from './pages/TripDetailsPage';
 import { UpcomingTripPage } from './pages/UpcomingTripPage';
 import { LiveTripPage } from './pages/LiveTripPage';
 import { SOSPage } from './pages/SOSPage';
+import { TripReportPage } from './pages/TripReportPage';
 import { LoginPage, SignupPage, ForgotPasswordPage } from './pages/auth';
 import './index.css';
 
@@ -44,6 +45,7 @@ function App() {
                         <Route path="/trips/:id/prepare" element={<UpcomingTripPage />} />
                         <Route path="/trips/:id/live" element={<LiveTripPage />} />
                         <Route path="/trips/:id/sos" element={<SOSPage />} />
+                        <Route path="/trips/:id/report" element={<TripReportPage />} />
                         <Route path="/profile" element={<ProfilePage />} />
             <Route path="/settings" element={<ProfilePage />} />
           </Route>

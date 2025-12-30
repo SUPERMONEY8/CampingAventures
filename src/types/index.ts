@@ -525,7 +525,61 @@ export interface ParticipantSatisfaction {
 }
 
 /**
- * Trip report with analytics and feedback
+ * Personal trip report for a user
+ */
+export interface PersonalTripReport {
+  id: string;
+  userId: string;
+  tripId: string;
+  tripTitle: string;
+  tripDate: Date;
+  tripDuration: number; // days
+  
+  // Statistics
+  distance: number; // km
+  elevation: number; // meters
+  activeHours: number; // hours
+  activitiesCompleted: number;
+  challengesCompleted: number;
+  pointsEarned: number;
+  badgesEarned: string[]; // Badge IDs
+  photosCount: number;
+  momentsShared: number;
+  roles: string[];
+  
+  // Activities timeline
+  activities: Array<{
+    id: string;
+    name: string;
+    time: Date;
+    completed: boolean;
+    photoUrl?: string;
+    personalNote?: string;
+  }>;
+  
+  // Photos
+  photos: Array<{
+    id: string;
+    url: string;
+    thumbnailUrl?: string;
+    timestamp: Date;
+    caption?: string;
+  }>;
+  
+  // Group info
+  participants: Array<{
+    userId: string;
+    userName: string;
+    avatarUrl?: string;
+  }>;
+  groupPhotos: string[];
+  
+  // Generated at
+  generatedAt: Date;
+}
+
+/**
+ * Trip report with analytics and feedback (admin)
  */
 export interface TripReport {
   tripId: string;
