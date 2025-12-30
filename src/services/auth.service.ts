@@ -339,20 +339,30 @@ export async function getUserProfile(
 
     const userData = userDocSnap.data();
     
+    console.log('🔍 auth.service.getUserProfile: Raw userData from Firestore:', userData);
+    console.log('🔍 auth.service.getUserProfile: Role from Firestore:', userData?.role);
+    
     // Convert Firestore timestamps to Date objects
-    return {
+    const userProfile = {
       ...userData,
-      history: userData.history.map((entry: {
+      history: (userData.history || []).map((entry: {
         tripId: string;
         tripTitle: string;
-        date: { toDate: () => Date };
+        date: { toDate?: () => Date } | Date | string;
         role: string;
         pointsEarned: number;
       }) => ({
         ...entry,
-        date: entry.date.toDate ? entry.date.toDate() : entry.date,
+        date: entry.date && typeof entry.date === 'object' && 'toDate' in entry.date && entry.date.toDate
+          ? entry.date.toDate()
+          : new Date(entry.date as Date | string),
       })),
     } as UserType;
+    
+    console.log('🔍 auth.service.getUserProfile: Final userProfile:', userProfile);
+    console.log('🔍 auth.service.getUserProfile: Role in final profile:', userProfile?.role);
+    
+    return userProfile;
   } catch (error) {
     const authError = error as FirebaseAuthError;
     throw new AuthServiceError(

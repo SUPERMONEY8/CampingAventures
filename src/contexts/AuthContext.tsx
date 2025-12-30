@@ -121,19 +121,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         if (firebaseUser) {
           try {
+            console.log('🔍 AuthContext: Loading user profile for:', firebaseUser.uid);
             const userProfile = await getUserProfile(firebaseUser.uid);
+            console.log('🔍 AuthContext: User profile loaded:', userProfile);
+            console.log('🔍 AuthContext: Role in profile:', userProfile?.role);
             if (isMounted) {
               setUser(userProfile);
+              console.log('✅ AuthContext: User state updated');
             }
           } catch (err) {
             const authError = err as AuthServiceError;
-            console.error('Failed to load user profile:', authError);
+            console.error('❌ AuthContext: Failed to load user profile:', authError);
             if (isMounted) {
               setError('Erreur lors du chargement du profil utilisateur');
               setUser(null);
             }
           }
         } else {
+          console.log('⚠️ AuthContext: No firebaseUser, setting user to null');
           setUser(null);
         }
 
