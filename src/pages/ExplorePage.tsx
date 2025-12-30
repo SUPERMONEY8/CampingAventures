@@ -88,6 +88,9 @@ export function ExplorePage() {
     setSearchQuery(tag);
   };
 
+  // Debug: Log to ensure component renders
+  console.log('ExplorePage rendering', { safeFilteredTrips: safeFilteredTrips.length, safeLoading, safeError });
+
   return (
     <div className="space-y-6">
       {/* Header with Search */}

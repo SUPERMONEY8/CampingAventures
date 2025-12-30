@@ -6,6 +6,7 @@ import { Home } from './pages/Home';
 import { DashboardPage } from './pages/DashboardPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { ExplorePage } from './pages/ExplorePage';
+import { TripDetailsPage } from './pages/TripDetailsPage';
 import { LoginPage, SignupPage, ForgotPasswordPage } from './pages/auth';
 import './index.css';
 
@@ -36,6 +37,7 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/trips" element={<DashboardPage />} />
             <Route path="/explore" element={<ExplorePage />} />
+            <Route path="/trips/:id" element={<TripDetailsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/settings" element={<ProfilePage />} />
           </Route>

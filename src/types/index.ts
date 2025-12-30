@@ -89,12 +89,77 @@ export interface Activity {
 }
 
 /**
+ * Day itinerary entry
+ */
+export interface DayItinerary {
+  day: number;
+  date: Date;
+  activities: Activity[];
+  description?: string;
+}
+
+/**
+ * Weather forecast entry
+ */
+export interface WeatherForecast {
+  date: Date;
+  temperature: {
+    min: number;
+    max: number;
+  };
+  condition: 'sunny' | 'cloudy' | 'rainy' | 'stormy' | 'snowy';
+  icon: string;
+  advice?: string;
+}
+
+/**
+ * Equipment checklist item
+ */
+export interface EquipmentItem {
+  id: string;
+  name: string;
+  category: 'clothing' | 'gear' | 'food' | 'safety' | 'other';
+  required: boolean;
+  description?: string;
+}
+
+/**
+ * Review/rating for a trip
+ */
+export interface TripReview {
+  id: string;
+  userId: string;
+  userName: string;
+  userAvatar?: string;
+  rating: number; // 1-5
+  comment: string;
+  date: Date;
+  photos?: string[];
+}
+
+/**
+ * Meeting point information
+ */
+export interface MeetingPoint {
+  name: string;
+  address: string;
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
+  time: string; // HH:mm format
+  notes?: string;
+}
+
+/**
  * Complete trip information
  */
 export interface Trip {
   id: string;
   title: string;
   date: Date;
+  endDate?: Date;
+  duration?: number; // in days
   location: {
     name: string;
     coordinates: {
@@ -107,7 +172,22 @@ export interface Trip {
   participants: TripParticipant[];
   status: TripStatus;
   description?: string;
+  longDescription?: string;
   activities?: Activity[];
+  itinerary?: DayItinerary[];
+  images?: string[];
+  price?: number;
+  accommodation?: 'tente' | 'cabane' | 'refuge' | 'hôtel' | 'autre';
+  meals?: string[];
+  included?: string[];
+  notIncluded?: string[];
+  highlights?: string[];
+  meetingPoint?: MeetingPoint;
+  equipment?: EquipmentItem[];
+  weatherForecast?: WeatherForecast[];
+  reviews?: TripReview[];
+  averageRating?: number;
+  totalReviews?: number;
   createdAt: Date;
   updatedAt: Date;
 }
