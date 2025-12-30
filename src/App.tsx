@@ -5,6 +5,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { Home } from './pages/Home';
 import { DashboardPage } from './pages/DashboardPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { ExplorePage } from './pages/ExplorePage';
 import { LoginPage, SignupPage, ForgotPasswordPage } from './pages/auth';
 import './index.css';
 
@@ -34,7 +35,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/trips" element={<DashboardPage />} />
-            <Route path="/explore" element={<DashboardPage />} />
+            <Route path="/explore" element={<ExplorePage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/settings" element={<ProfilePage />} />
           </Route>

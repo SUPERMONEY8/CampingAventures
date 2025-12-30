@@ -2,7 +2,16 @@
  * Services exports
  */
 
-export * from './user.service';
-export * from './auth.service';
 export * from './firebase';
+export * from './auth.service';
+// User service exports (avoid conflicts with auth.service)
+export {
+  getUserProfile,
+  updateUserProfile,
+  uploadAvatar,
+  getUserStats,
+  getUserTrips,
+  getUserBadges,
+  updateMedicalInfo,
+} from './user.service';
 
