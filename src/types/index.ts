@@ -464,6 +464,56 @@ export interface TripReport {
 }
 
 /**
+ * Notification types
+ */
+export type NotificationType =
+  | 'reminderJ7'
+  | 'reminderJ3'
+  | 'reminderJ1'
+  | 'weatherAlert'
+  | 'checklistReminder'
+  | 'documentReminder'
+  | 'groupMessage'
+  | 'guideTip'
+  | 'enrollmentConfirmed'
+  | 'tripCancelled'
+  | 'tripUpdated';
+
+/**
+ * Notification priority
+ */
+export type NotificationPriority = 'low' | 'normal' | 'high' | 'urgent';
+
+/**
+ * Notification data payload
+ */
+export interface NotificationData {
+  tripId?: string;
+  enrollmentId?: string;
+  actionUrl?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Notification document
+ */
+export interface Notification {
+  id: string;
+  userId: string;
+  type: NotificationType;
+  title: string;
+  body: string;
+  data?: NotificationData;
+  priority: NotificationPriority;
+  read: boolean;
+  readAt?: Date;
+  createdAt: Date;
+  scheduledFor?: Date;
+  sent: boolean;
+  sentAt?: Date;
+}
+
+/**
  * Overall platform analytics
  */
 export interface Analytics {

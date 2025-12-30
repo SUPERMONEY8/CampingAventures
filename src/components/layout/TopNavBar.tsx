@@ -17,6 +17,8 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import { NotificationCenter } from '../notifications/NotificationCenter';
+import { useNotifications } from '../../hooks/useNotifications';
 import { Tent } from 'lucide-react';
 
 /**
@@ -33,8 +35,11 @@ export function TopNavBar({ onMenuClick }: TopNavBarProps) {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [notifications] = useState(3); // Mock notifications count
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const notificationsRef = useRef<HTMLDivElement>(null);
+  
+  const { unreadCount } = useNotifications(user?.id || null, !!user);
 
   /**
    * Close dropdown when clicking outside
@@ -105,21 +110,30 @@ export function TopNavBar({ onMenuClick }: TopNavBarProps) {
           {/* Right Section: Notifications + Avatar */}
           <div className="flex items-center gap-2 md:gap-3">
             {/* Notifications */}
-            <button
-              className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-smooth touch-manipulation"
-              aria-label="Notifications"
-            >
-              <Bell className="w-5 h-5 md:w-6 md:h-6 text-gray-700 dark:text-gray-300" />
-              {notifications > 0 && (
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="absolute top-1 right-1 w-4 h-4 md:w-5 md:h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center"
+            {user && (
+              <div className="relative" ref={notificationsRef}>
+                <button
+                  onClick={() => setNotificationsOpen(!notificationsOpen)}
+                  className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-smooth touch-manipulation"
+                  aria-label="Notifications"
                 >
-                  {notifications > 9 ? '9+' : notifications}
-                </motion.span>
-              )}
-            </button>
+                  <Bell className="w-5 h-5 md:w-6 md:h-6 text-gray-700 dark:text-gray-300" />
+                  {unreadCount > 0 && (
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute top-1 right-1 w-4 h-4 md:w-5 md:h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center"
+                    >
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </motion.span>
+                  )}
+                </button>
+                <NotificationCenter
+                  open={notificationsOpen}
+                  onClose={() => setNotificationsOpen(false)}
+                />
+              </div>
+            )}
 
             {/* User Avatar Dropdown */}
             {user ? (

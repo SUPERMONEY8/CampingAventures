@@ -22,6 +22,31 @@ export function getRelativeTime(date: Date | string): string {
 }
 
 /**
+ * Format relative time (e.g., "il y a 2 heures", "il y a 3 jours")
+ */
+export function formatRelativeTime(date: Date | string): string {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const now = new Date();
+  const diffMs = now.getTime() - dateObj.getTime();
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHour = Math.floor(diffMin / 60);
+  const diffDay = Math.floor(diffHour / 24);
+
+  if (diffSec < 60) {
+    return 'À l\'instant';
+  } else if (diffMin < 60) {
+    return `Il y a ${diffMin} minute${diffMin > 1 ? 's' : ''}`;
+  } else if (diffHour < 24) {
+    return `Il y a ${diffHour} heure${diffHour > 1 ? 's' : ''}`;
+  } else if (diffDay < 7) {
+    return `Il y a ${diffDay} jour${diffDay > 1 ? 's' : ''}`;
+  } else {
+    return formatDate(dateObj, 'dd MMM yyyy');
+  }
+}
+
+/**
  * Calculate countdown to date
  */
 export function getCountdown(targetDate: Date | string): {
