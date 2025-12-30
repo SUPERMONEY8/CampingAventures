@@ -340,7 +340,9 @@ export async function getUserProfile(
     const userData = userDocSnap.data();
     
     console.log('🔍 auth.service.getUserProfile: Raw userData from Firestore:', userData);
-    console.log('🔍 auth.service.getUserProfile: Role from Firestore:', userData?.role);
+    console.log('🔍 auth.service.getUserProfile: Role from Firestore (raw):', userData?.role);
+    console.log('🔍 auth.service.getUserProfile: Role type:', typeof userData?.role);
+    console.log('🔍 auth.service.getUserProfile: All keys in userData:', Object.keys(userData || {}));
     
     // Convert Firestore timestamps to Date objects
     const userProfile = {
@@ -360,7 +362,8 @@ export async function getUserProfile(
     } as UserType;
     
     console.log('🔍 auth.service.getUserProfile: Final userProfile:', userProfile);
-    console.log('🔍 auth.service.getUserProfile: Role in final profile:', userProfile?.role);
+    console.log('🔍 auth.service.getUserProfile: Role in final profile (value):', String(userProfile?.role || 'UNDEFINED'));
+    console.log('🔍 auth.service.getUserProfile: Role in final profile (type):', typeof userProfile?.role);
     
     return userProfile;
   } catch (error) {

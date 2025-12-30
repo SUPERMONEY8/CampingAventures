@@ -124,10 +124,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
             console.log('🔍 AuthContext: Loading user profile for:', firebaseUser.uid);
             const userProfile = await getUserProfile(firebaseUser.uid);
             console.log('🔍 AuthContext: User profile loaded:', userProfile);
-            console.log('🔍 AuthContext: Role in profile:', userProfile?.role);
+            console.log('🔍 AuthContext: Role in profile (value):', String(userProfile?.role || 'UNDEFINED'));
+            console.log('🔍 AuthContext: Role in profile (type):', typeof userProfile?.role);
+            console.log('🔍 AuthContext: Has role property?', 'role' in (userProfile || {}));
             if (isMounted) {
               setUser(userProfile);
               console.log('✅ AuthContext: User state updated');
+              console.log('🔍 AuthContext: User state after update - role:', (userProfile as any)?.role);
             }
           } catch (err) {
             const authError = err as AuthServiceError;
