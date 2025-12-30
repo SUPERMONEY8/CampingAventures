@@ -15,7 +15,6 @@ import {
   Settings,
   LogOut,
   ChevronDown,
-  X,
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { Tent } from 'lucide-react';
@@ -34,7 +33,7 @@ export function TopNavBar({ onMenuClick }: TopNavBarProps) {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [notifications, setNotifications] = useState(3); // Mock notifications count
+  const [notifications] = useState(3); // Mock notifications count
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   /**
