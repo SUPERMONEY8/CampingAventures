@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { collection, query, where, orderBy, getDocs, type DocumentData } from 'firebase/firestore';
+import { collection, query, orderBy, getDocs, type DocumentData } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import type { Trip } from '../types';
 
@@ -40,12 +40,12 @@ export function useTrips(userId?: string): UseTripsReturn {
       let q = query(tripsRef, orderBy('date', 'asc'));
 
       // Filter by user participation if userId provided
+      // Note: This requires a composite index in Firestore
+      // For now, we'll fetch all trips and filter in memory to avoid index error
       if (userId) {
-        q = query(
-          tripsRef,
-          where('participants', 'array-contains', userId),
-          orderBy('date', 'asc')
-        );
+        // Fetch all trips and filter by participants in memory
+        // This avoids the need for a composite index
+        q = query(tripsRef, orderBy('date', 'asc'));
       }
 
       const querySnapshot = await getDocs(q);
@@ -53,14 +53,24 @@ export function useTrips(userId?: string): UseTripsReturn {
 
       querySnapshot.forEach((doc) => {
         const data = doc.data() as DocumentData;
-        tripsData.push({
+        const trip = {
           id: doc.id,
           ...data,
           date: data.date?.toDate ? data.date.toDate() : new Date(data.date),
           createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt || Date.now()),
           updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt || Date.now()),
           participants: data.participants || [],
-        } as Trip);
+        } as Trip;
+
+        // Filter by userId in memory if provided
+        if (userId) {
+          const participantIds = trip.participants.map((p: { userId?: string; id?: string }) => p.userId || p.id || p);
+          if (participantIds.includes(userId)) {
+            tripsData.push(trip);
+          }
+        } else {
+          tripsData.push(trip);
+        }
       });
 
       setTrips(tripsData);

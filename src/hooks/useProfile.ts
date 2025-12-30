@@ -4,7 +4,7 @@
  * Handles profile updates, avatar upload, and medical info.
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { doc, updateDoc, getDoc, type DocumentData } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { db, storage } from '../services/firebase';
@@ -151,6 +151,15 @@ export function useProfile(userId: string): UseProfileReturn {
       throw error;
     }
   };
+
+  /**
+   * Fetch profile on mount and when userId changes
+   */
+  useEffect(() => {
+    if (userId) {
+      fetchProfile();
+    }
+  }, [userId]);
 
   return {
     profile,
