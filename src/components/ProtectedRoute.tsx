@@ -79,6 +79,12 @@ export function ProtectedRoute({
 }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
   const location = useLocation();
+  
+  console.log('🔍 ProtectedRoute: Component rendered');
+  console.log('🔍 ProtectedRoute: Loading state:', loading);
+  console.log('🔍 ProtectedRoute: User state:', user);
+  console.log('🔍 ProtectedRoute: User role in state:', (user as any)?.role);
+  console.log('🔍 ProtectedRoute: Required role:', requiredRole);
 
   // Show loading state while checking authentication
   if (loading) {
