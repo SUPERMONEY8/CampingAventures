@@ -87,6 +87,13 @@
            bg-white dark:bg-gray-800 
            text-gray-900 dark:text-gray-100
            outline-none transition-smooth;
+    font-size: 16px; /* Prevent iOS zoom on focus */
+  }
+  
+  @media (min-width: 768px) {
+    .medical-input {
+      font-size: inherit;
+    }
   }
 
   /* Medical Label - Typography */
