@@ -58,7 +58,7 @@ export function TopNavBar({ onMenuClick }: TopNavBarProps) {
   const handleLogout = async (): Promise<void> => {
     await signOut();
     setIsDropdownOpen(false);
-    navigate('/auth/login');
+    navigate('/login');
   };
 
   /**
@@ -189,7 +189,7 @@ export function TopNavBar({ onMenuClick }: TopNavBarProps) {
               </div>
             ) : (
               <Link
-                to="/auth/login"
+                to="/login"
                 className="px-3 py-1.5 md:px-4 md:py-2 text-sm md:text-base font-semibold text-primary hover:text-accent transition-smooth"
               >
                 Connexion

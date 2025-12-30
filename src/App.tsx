@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { MainLayout } from './components/layout';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -13,10 +13,15 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          {/* Public routes */}
-          <Route path="/auth/login" element={<LoginPage />} />
-          <Route path="/auth/signup" element={<SignupPage />} />
-          <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+          {/* Public routes - Short paths */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          
+          {/* Public routes - Long paths (redirect to short paths) */}
+          <Route path="/auth/login" element={<Navigate to="/login" replace />} />
+          <Route path="/auth/signup" element={<Navigate to="/signup" replace />} />
+          <Route path="/auth/forgot-password" element={<Navigate to="/forgot-password" replace />} />
           
           {/* Protected routes with layout */}
           <Route

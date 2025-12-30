@@ -118,7 +118,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
    */
   const handleLogout = async (): Promise<void> => {
     await signOut();
-    navigate('/auth/login');
+    navigate('/login');
   };
 
   return (

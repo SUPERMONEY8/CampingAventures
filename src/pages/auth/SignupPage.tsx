@@ -733,7 +733,7 @@ export function SignupPage() {
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Déjà un compte ?{' '}
               <Link
-                to="/auth/login"
+                to="/login"
                 className="text-primary hover:text-accent font-semibold transition-smooth"
               >
                 Se connecter
