@@ -486,6 +486,99 @@ export interface Photo {
 }
 
 /**
+ * Post type in community feed
+ */
+export type PostType = 'trip_completion' | 'photo' | 'badge_unlock' | 'milestone' | 'reflection' | 'question';
+
+/**
+ * Post visibility
+ */
+export type PostVisibility = 'public' | 'friends' | 'private';
+
+/**
+ * Post reaction
+ */
+export interface PostReaction {
+  userId: string;
+  userName: string;
+  emoji: string;
+  timestamp: Date;
+}
+
+/**
+ * Post comment
+ */
+export interface PostComment {
+  id: string;
+  userId: string;
+  userName: string;
+  userAvatar?: string;
+  content: string;
+  timestamp: Date;
+  likes: string[]; // User IDs
+  replies?: PostComment[];
+  replyToId?: string;
+}
+
+/**
+ * Community post
+ */
+export interface Post {
+  id: string;
+  userId: string;
+  userName: string;
+  userAvatar?: string;
+  type: PostType;
+  visibility: PostVisibility;
+  
+  // Content
+  content?: string;
+  photoUrl?: string;
+  tripId?: string;
+  tripTitle?: string;
+  badgeId?: string;
+  badgeName?: string;
+  badgeIcon?: string;
+  milestone?: {
+    level: number;
+    points: number;
+  };
+  
+  // Stats (for trip completion)
+  stats?: {
+    distance?: number;
+    elevation?: number;
+    points?: number;
+    activitiesCompleted?: number;
+  };
+  
+  // Location
+  location?: {
+    name: string;
+    coordinates?: {
+      lat: number;
+      lng: number;
+    };
+  };
+  
+  // Tags
+  taggedUsers?: string[]; // User IDs
+  hashtags?: string[];
+  
+  // Interactions
+  likes: string[]; // User IDs
+  reactions: PostReaction[];
+  comments: PostComment[];
+  shares: number;
+  bookmarks: string[]; // User IDs
+  
+  // Metadata
+  timestamp: Date;
+  editedAt?: Date;
+  reported: boolean;
+}
+
+/**
  * Message in trip chat or notifications
  */
 export interface Message {
