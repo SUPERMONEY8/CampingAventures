@@ -21,34 +21,35 @@ import { getAnalytics, type Analytics as FirebaseAnalytics } from 'firebase/anal
 /**
  * Firebase configuration from environment variables
  * All variables must be prefixed with VITE_ to be accessible in the client
+ * Falls back to hardcoded values for production if env vars are missing
  */
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'AIzaSyCLQ_9RsfXuADTNzcRLUu3ihfmLflNtzL8',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'camping-aventures.firebaseapp.com',
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'camping-aventures',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'camping-aventures.firebasestorage.app',
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '57354850876',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || '1:57354850876:web:97b68a125e664310b6e939',
 };
 
-// Validate that all required environment variables are present
-const requiredEnvVars = [
-  'VITE_FIREBASE_API_KEY',
-  'VITE_FIREBASE_AUTH_DOMAIN',
-  'VITE_FIREBASE_PROJECT_ID',
-  'VITE_FIREBASE_STORAGE_BUCKET',
-  'VITE_FIREBASE_MESSAGING_SENDER_ID',
-  'VITE_FIREBASE_APP_ID',
+// Validate that all required Firebase config values are present
+const requiredConfigKeys = [
+  'apiKey',
+  'authDomain',
+  'projectId',
+  'storageBucket',
+  'messagingSenderId',
+  'appId',
 ];
 
-const missingVars = requiredEnvVars.filter(
-  (varName) => !import.meta.env[varName]
+const missingKeys = requiredConfigKeys.filter(
+  (key) => !firebaseConfig[key as keyof typeof firebaseConfig]
 );
 
-if (missingVars.length > 0) {
-  throw new Error(
-    `Missing required Firebase environment variables: ${missingVars.join(', ')}\n` +
-    'Please check your .env.local file.'
+if (missingKeys.length > 0) {
+  console.error(
+    `Missing required Firebase configuration: ${missingKeys.join(', ')}\n` +
+    'Please check your .env.local file or Firebase configuration.'
   );
 }
 
