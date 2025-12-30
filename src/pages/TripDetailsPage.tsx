@@ -40,6 +40,7 @@ import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Modal } from '../components/ui/Modal';
 import { Breadcrumb } from '../components/navigation/Breadcrumb';
+import { InscriptionModal } from '../components/trip/InscriptionModal';
 import { formatDate } from '../utils/date';
 import type { TripReview, EquipmentItem, DayItinerary, WeatherForecast } from '../types';
 
@@ -70,6 +71,7 @@ export function TripDetailsPage() {
   const [lightboxImage, setLightboxImage] = useState<string>('');
   const [reviewFilter, setReviewFilter] = useState<number | null>(null);
   const [equipmentChecked, setEquipmentChecked] = useState<Set<string>>(new Set());
+  const [inscriptionModalOpen, setInscriptionModalOpen] = useState(false);
 
   // Refs for smooth scroll
   const sectionsRef = useRef<Record<string, HTMLDivElement>>({});
@@ -943,10 +945,7 @@ export function TripDetailsPage() {
             <Button
               variant="primary"
               size="lg"
-              onClick={() => {
-                // TODO: Implement registration
-                alert('Fonctionnalité d\'inscription à venir');
-              }}
+              onClick={() => setInscriptionModalOpen(true)}
               disabled={availableSpots === 0}
               className="flex-1 sm:flex-none"
             >
@@ -1029,6 +1028,19 @@ export function TripDetailsPage() {
           />
         </div>
       </Modal>
+
+      {/* Inscription Modal */}
+      {trip && (
+        <InscriptionModal
+          open={inscriptionModalOpen}
+          onClose={() => setInscriptionModalOpen(false)}
+          trip={trip}
+          onSuccess={(enrollmentId) => {
+            console.log('Enrollment successful:', enrollmentId);
+            // Refresh trip data or show success message
+          }}
+        />
+      )}
     </div>
   );
 }

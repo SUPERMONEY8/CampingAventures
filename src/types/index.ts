@@ -152,6 +152,58 @@ export interface MeetingPoint {
 }
 
 /**
+ * Enrollment status
+ */
+export type EnrollmentStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
+
+/**
+ * Payment method
+ */
+export type PaymentMethod = 'ccp' | 'baridimob' | 'on-site' | 'pending';
+
+/**
+ * Dietary preference
+ */
+export type DietaryPreference = 'omnivore' | 'végétarien' | 'vegan' | 'sans-gluten';
+
+/**
+ * Enrollment information for a trip
+ */
+export interface Enrollment {
+  id: string;
+  tripId: string;
+  userId: string;
+  status: EnrollmentStatus;
+  enrollmentDate: Date;
+  
+  // Step 1
+  acceptedTerms: boolean;
+  
+  // Step 2
+  dietaryPreference?: DietaryPreference;
+  tshirtSize?: string;
+  needsTransport?: boolean;
+  transportPickupPoint?: string;
+  additionalQuestions?: string;
+  
+  // Step 3
+  medicalInfoConfirmed: boolean;
+  
+  // Step 4
+  paymentMethod?: PaymentMethod;
+  paymentProofUrl?: string;
+  transactionNumber?: string;
+  totalAmount: number;
+  paidAmount?: number;
+  paymentDate?: Date;
+  
+  // Metadata
+  reservationNumber: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
  * Complete trip information
  */
 export interface Trip {
