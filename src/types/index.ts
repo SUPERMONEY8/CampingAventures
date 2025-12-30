@@ -46,6 +46,8 @@ export interface User {
   physicalLevel: PhysicalLevel;
   interests: Interest[];
   history: TripHistoryEntry[];
+  avatarUrl?: string;
+  medicalInfo?: MedicalInfo;
 }
 
 // ============================================================================

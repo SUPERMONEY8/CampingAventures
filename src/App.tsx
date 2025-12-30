@@ -4,6 +4,7 @@ import { MainLayout } from './components/layout';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Home } from './pages/Home';
 import { DashboardPage } from './pages/DashboardPage';
+import { ProfilePage } from './pages/ProfilePage';
 import { LoginPage, SignupPage, ForgotPasswordPage } from './pages/auth';
 import './index.css';
 
@@ -29,8 +30,8 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/trips" element={<DashboardPage />} />
             <Route path="/explore" element={<DashboardPage />} />
-            <Route path="/profile" element={<DashboardPage />} />
-            <Route path="/settings" element={<DashboardPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/settings" element={<ProfilePage />} />
           </Route>
         </Routes>
       </Router>
