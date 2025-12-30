@@ -158,6 +158,22 @@ export interface UserProgress {
   longestStreak: number;
 }
 
+/**
+ * User statistics and progress summary
+ */
+export interface UserStats {
+  totalPoints: number;
+  level: number;
+  totalTrips: number;
+  completedTrips: number;
+  totalDistance: number;
+  totalHours: number;
+  badgesCount: number;
+  currentStreak: number;
+  longestStreak: number;
+  nextLevelPoints: number;
+}
+
 // ============================================================================
 // Emergency Types
 // ============================================================================

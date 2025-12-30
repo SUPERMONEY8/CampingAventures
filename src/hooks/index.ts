@@ -1,5 +1,9 @@
-// Custom React hooks for the camping adventure app
+/**
+ * Hooks exports
+ */
 
-export * from './useLocalStorage';
 export * from './useAuth';
-
+export * from './useUser';
+export * from './useProfile';
+export * from './useTrips';
+export * from './useUserProgress';
