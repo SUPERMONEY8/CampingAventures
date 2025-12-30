@@ -65,26 +65,14 @@ interface ActivityItem {
 export function DashboardPage() {
   const { user } = useAuth();
   
-  let upcomingTrips: Trip[] = [];
-  let tripsLoading = false;
-  let progress = null;
-  let progressLoading = false;
+  // Use hooks directly - they handle errors internally
+  const tripsResult = useTrips(user?.id);
+  const progressResult = useUserProgress(user?.id || '');
   
-  try {
-    const tripsResult = useTrips(user?.id);
-    upcomingTrips = tripsResult.upcomingTrips || [];
-    tripsLoading = tripsResult.loading || false;
-  } catch (error) {
-    console.error('Error loading trips:', error);
-  }
-  
-  try {
-    const progressResult = useUserProgress(user?.id || '');
-    progress = progressResult.progress;
-    progressLoading = progressResult.loading || false;
-  } catch (error) {
-    console.error('Error loading progress:', error);
-  }
+  const upcomingTrips = tripsResult.upcomingTrips || [];
+  const tripsLoading = tripsResult.loading || false;
+  const progress = progressResult.progress;
+  const progressLoading = progressResult.loading || false;
 
   // Get next trip
   const nextTrip = upcomingTrips.length > 0 ? upcomingTrips[0] : null;
