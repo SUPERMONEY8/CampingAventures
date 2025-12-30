@@ -172,12 +172,12 @@ export function useTripsFilter(
 
   return {
     trips: allTrips,
-    filteredTrips: paginatedTrips,
-    loading: isLoading,
+    filteredTrips: paginatedTrips || [],
+    loading: isLoading || false,
     error: error ? (error as Error).message : null,
-    hasMore: filteredTrips.length > paginatedTrips.length,
+    hasMore: (filteredTrips?.length || 0) > (paginatedTrips?.length || 0),
     loadMore,
-    totalCount: filteredTrips.length,
+    totalCount: filteredTrips?.length || 0,
   };
 }
 

@@ -22,6 +22,7 @@ import { TripFilters, type TripFilters as TripFiltersType } from '../components/
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import type { SortOption } from '../hooks/useTripsFilter';
+import type { Trip } from '../types';
 
 /**
  * Popular tags for quick filtering
@@ -49,11 +50,13 @@ export function ExplorePage() {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [bookmarkedTrips, setBookmarkedTrips] = useState<Set<string>>(new Set());
 
-  const { filteredTrips, loading, error, totalCount } = useTripsFilter(
-    filters,
-    searchQuery,
-    sortBy
-  );
+  const tripsResult = useTripsFilter(filters, searchQuery, sortBy);
+
+  // Safe access with fallbacks
+  const safeFilteredTrips = tripsResult?.filteredTrips || [];
+  const safeLoading = tripsResult?.loading ?? false;
+  const safeError = tripsResult?.error || null;
+  const safeTotalCount = tripsResult?.totalCount || 0;
 
   /**
    * Handle bookmark toggle
@@ -198,12 +201,12 @@ export function ExplorePage() {
 
             {/* Results Count */}
             <div className="text-sm text-gray-600 dark:text-gray-400">
-              <span className="font-semibold">{totalCount}</span> sortie{totalCount > 1 ? 's' : ''} trouvée{totalCount > 1 ? 's' : ''}
+              <span className="font-semibold">{safeTotalCount}</span> sortie{safeTotalCount > 1 ? 's' : ''} trouvée{safeTotalCount > 1 ? 's' : ''}
             </div>
           </div>
 
           {/* Loading State */}
-          {loading && (
+          {safeLoading && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div key={i} className="h-96 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
@@ -212,16 +215,16 @@ export function ExplorePage() {
           )}
 
           {/* Error State */}
-          {error && (
+          {safeError && (
             <div className="medical-card text-center py-12">
-              <p className="text-danger-600 dark:text-danger-400">{error}</p>
+              <p className="text-danger-600 dark:text-danger-400">{safeError}</p>
             </div>
           )}
 
           {/* Results */}
-          {!loading && !error && (
+          {!safeLoading && !safeError && (
             <AnimatePresence mode="wait">
-              {filteredTrips.length > 0 ? (
+              {safeFilteredTrips.length > 0 ? (
                 <>
                   <motion.div
                     key={viewMode}
@@ -235,7 +238,7 @@ export function ExplorePage() {
                         : 'space-y-4'
                     }
                   >
-                    {filteredTrips.map((trip) => (
+                    {safeFilteredTrips.map((trip: Trip) => (
                       <TripCard
                         key={trip.id}
                         trip={trip}
@@ -248,10 +251,10 @@ export function ExplorePage() {
                   </motion.div>
 
                   {/* Load More */}
-                  {filteredTrips.length < totalCount && (
+                  {safeFilteredTrips.length < safeTotalCount && (
                     <div className="flex justify-center pt-4">
                       <Button variant="outline" onClick={() => {}}>
-                        Charger plus ({totalCount - filteredTrips.length} restantes)
+                        Charger plus ({safeTotalCount - safeFilteredTrips.length} restantes)
                       </Button>
                     </div>
                   )}
