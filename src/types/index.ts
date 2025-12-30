@@ -118,7 +118,7 @@ export interface WeatherForecast {
 export interface EquipmentItem {
   id: string;
   name: string;
-  category: 'clothing' | 'gear' | 'food' | 'safety' | 'other';
+  category: 'clothing' | 'gear' | 'food' | 'safety' | 'hygiene' | 'documents' | 'other';
   required: boolean;
   description?: string;
 }
@@ -165,6 +165,41 @@ export type PaymentMethod = 'ccp' | 'baridimob' | 'on-site' | 'pending';
  * Dietary preference
  */
 export type DietaryPreference = 'omnivore' | 'végétarien' | 'vegan' | 'sans-gluten';
+
+/**
+ * Checklist item for trip preparation
+ */
+export interface ChecklistItem {
+  id: string;
+  category: 'clothing' | 'gear' | 'documents' | 'food' | 'hygiene' | 'other';
+  name: string;
+  checked: boolean;
+  quantity?: number;
+  notes?: string;
+  required: boolean;
+}
+
+/**
+ * Checklist category with items
+ */
+export interface ChecklistCategory {
+  id: string;
+  name: string;
+  items: ChecklistItem[];
+}
+
+/**
+ * Document for trip preparation
+ */
+export interface TripDocument {
+  id: string;
+  name: string;
+  type: 'pdf' | 'image' | 'map';
+  url: string;
+  downloaded: boolean;
+  downloadDate?: Date;
+  size?: string;
+}
 
 /**
  * Enrollment information for a trip
