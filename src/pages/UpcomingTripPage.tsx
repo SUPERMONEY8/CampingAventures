@@ -41,6 +41,7 @@ import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Modal } from '../components/ui/Modal';
 import { Breadcrumb } from '../components/navigation/Breadcrumb';
+import { PreparationAssistant } from '../components/trip/PreparationAssistant';
 import { useAuth } from '../hooks/useAuth';
 import { formatDate } from '../utils/date';
 import type { ChecklistItem, ChecklistCategory, TripDocument } from '../types';
@@ -906,7 +907,19 @@ export function UpcomingTripPage() {
           </Card>
         </section>
 
-        {/* Section 8: Actions */}
+        {/* Section 8: Assistant IA */}
+        <section>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+            Assistant IA de Préparation
+          </h2>
+          <PreparationAssistant
+            trip={trip}
+            weather={trip.weatherForecast}
+            open={true}
+          />
+        </section>
+
+        {/* Section 9: Actions */}
         <section>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Actions</h2>
           <div className="flex flex-col sm:flex-row gap-3">
