@@ -197,6 +197,8 @@ export function Tabs({
           border-gray-200
           dark:border-gray-700
           ${fullWidth ? 'w-full' : ''}
+          snap-x snap-mandatory
+          -mx-4 px-4
         `}
         role="tablist"
         aria-label="Navigation par onglets"
@@ -227,6 +229,7 @@ export function Tabs({
                 transition-smooth
                 touch-manipulation
                 whitespace-nowrap
+                flex-shrink-0
                 ${fullWidth ? 'flex-1 justify-center' : ''}
                 ${
                   isActive

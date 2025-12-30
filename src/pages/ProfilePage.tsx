@@ -300,7 +300,9 @@ export function ProfilePage() {
       </div>
 
       {/* Tabs */}
-      <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
+      <div className="w-full">
+        <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} fullWidth={false} />
+      </div>
 
       {/* Tab Content */}
       <div className="mt-6">
