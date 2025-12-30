@@ -358,6 +358,74 @@ export interface UserStats {
 // ============================================================================
 
 /**
+ * SOS Alert
+ */
+export interface SOSAlert {
+  id: string;
+  userId: string;
+  tripId: string;
+  location: {
+    lat: number;
+    lng: number;
+    accuracy?: number;
+    timestamp: Date;
+  };
+  triggeredAt: Date;
+  resolvedAt?: Date;
+  resolved: boolean;
+  notes?: string;
+  guideNotified: boolean;
+  emergencyContactNotified: boolean;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+}
+
+/**
+ * Safety information for a trip
+ */
+export interface SafetyInfo {
+  tripId: string;
+  guideContact: {
+    name: string;
+    phone: string;
+    whatsapp?: string;
+  };
+  emergencyNumbers: {
+    police: string;
+    protectionCivile: string;
+    medical: string;
+  };
+  meetingPoint: {
+    name: string;
+    address: string;
+    coordinates: {
+      lat: number;
+      lng: number;
+    };
+  };
+  nearestHospital?: {
+    name: string;
+    address: string;
+    phone: string;
+    coordinates: {
+      lat: number;
+      lng: number;
+    };
+  };
+}
+
+/**
+ * Safety checklist item
+ */
+export interface SafetyChecklistItem {
+  id: string;
+  label: string;
+  description?: string;
+  checked: boolean;
+  required: boolean;
+  category: 'device' | 'preparation' | 'medical' | 'communication';
+}
+
+/**
  * Medical information for emergency situations
  */
 export interface MedicalInfo {
@@ -379,12 +447,15 @@ export interface SOSAlert {
     lat: number;
     lng: number;
     accuracy?: number;
+    timestamp: Date;
   };
-  timestamp: Date;
+  triggeredAt: Date;
   resolved: boolean;
   resolvedAt?: Date;
   resolvedBy?: string;
-  message?: string;
+  notes?: string;
+  guideNotified: boolean;
+  emergencyContactNotified: boolean;
   severity: 'low' | 'medium' | 'high' | 'critical';
 }
 
