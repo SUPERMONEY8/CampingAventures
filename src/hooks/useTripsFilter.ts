@@ -6,7 +6,7 @@
 
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { collection, query, getDocs, orderBy, type DocumentData } from 'firebase/firestore';
+import { collection, query, getDocs, type DocumentData } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import type { Trip } from '../types';
 import type { TripFilters } from '../components/trips/TripFilters';
@@ -46,26 +46,35 @@ export function useTripsFilter(
   const { data, isLoading, error } = useQuery({
     queryKey: ['trips', 'all'],
     queryFn: async () => {
-      const tripsRef = collection(db, 'trips');
-      let q = query(tripsRef, orderBy('createdAt', 'desc'));
+      try {
+        const tripsRef = collection(db, 'trips');
+        // Fetch all trips without orderBy to avoid index requirement
+        const q = query(tripsRef);
+        const querySnapshot = await getDocs(q);
+        const trips: Trip[] = [];
 
-      const querySnapshot = await getDocs(q);
-      const trips: Trip[] = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data() as DocumentData;
+          trips.push({
+            id: doc.id,
+            ...data,
+            date: data.date?.toDate ? data.date.toDate() : new Date(data.date),
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt || Date.now()),
+            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt || Date.now()),
+            participants: data.participants || [],
+          } as Trip);
+        });
 
-      querySnapshot.forEach((doc) => {
-        const data = doc.data() as DocumentData;
-        trips.push({
-          id: doc.id,
-          ...data,
-          date: data.date?.toDate ? data.date.toDate() : new Date(data.date),
-          createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt || Date.now()),
-          updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt || Date.now()),
-          participants: data.participants || [],
-        } as Trip);
-      });
+        // Sort by createdAt in memory (descending)
+        trips.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
-      setAllTrips(trips);
-      return trips;
+        setAllTrips(trips);
+        return trips;
+      } catch (err) {
+        console.error('Error fetching trips:', err);
+        // Return empty array instead of throwing to prevent page crash
+        return [];
+      }
     },
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
