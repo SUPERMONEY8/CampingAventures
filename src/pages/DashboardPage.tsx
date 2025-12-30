@@ -64,8 +64,27 @@ interface ActivityItem {
  */
 export function DashboardPage() {
   const { user } = useAuth();
-  const { upcomingTrips, loading: tripsLoading } = useTrips(user?.id);
-  const { progress, loading: progressLoading } = useUserProgress(user?.id || '');
+  
+  let upcomingTrips: Trip[] = [];
+  let tripsLoading = false;
+  let progress = null;
+  let progressLoading = false;
+  
+  try {
+    const tripsResult = useTrips(user?.id);
+    upcomingTrips = tripsResult.upcomingTrips || [];
+    tripsLoading = tripsResult.loading || false;
+  } catch (error) {
+    console.error('Error loading trips:', error);
+  }
+  
+  try {
+    const progressResult = useUserProgress(user?.id || '');
+    progress = progressResult.progress;
+    progressLoading = progressResult.loading || false;
+  } catch (error) {
+    console.error('Error loading progress:', error);
+  }
 
   // Get next trip
   const nextTrip = upcomingTrips.length > 0 ? upcomingTrips[0] : null;

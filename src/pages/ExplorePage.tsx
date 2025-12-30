@@ -50,7 +50,18 @@ export function ExplorePage() {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [bookmarkedTrips, setBookmarkedTrips] = useState<Set<string>>(new Set());
 
-  const tripsResult = useTripsFilter(filters, searchQuery, sortBy);
+  let tripsResult;
+  try {
+    tripsResult = useTripsFilter(filters, searchQuery, sortBy);
+  } catch (error) {
+    console.error('Error in useTripsFilter:', error);
+    tripsResult = {
+      filteredTrips: [],
+      loading: false,
+      error: error instanceof Error ? error.message : 'Une erreur est survenue',
+      totalCount: 0,
+    };
+  }
 
   // Safe access with fallbacks
   const safeFilteredTrips = tripsResult?.filteredTrips || [];
