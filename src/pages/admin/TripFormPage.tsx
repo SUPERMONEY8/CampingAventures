@@ -197,9 +197,15 @@ export function TripFormPage() {
       queryClient.invalidateQueries({ queryKey: ['adminTrips'] });
       queryClient.invalidateQueries({ queryKey: ['trips'] });
       queryClient.invalidateQueries({ queryKey: ['trips', 'all'] });
-      // Also refetch immediately for better UX
-      queryClient.refetchQueries({ queryKey: ['trips'] });
-      queryClient.refetchQueries({ queryKey: ['trips', 'all'] });
+      // Refetch in background without showing loading state
+      queryClient.refetchQueries({ 
+        queryKey: ['trips'],
+        type: 'active', // Only refetch active queries
+      });
+      queryClient.refetchQueries({ 
+        queryKey: ['trips', 'all'],
+        type: 'active',
+      });
       // Show success message
       alert(`Sortie "${trip.title}" créée avec succès !`);
       navigate('/admin/trips');

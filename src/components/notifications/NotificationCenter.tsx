@@ -44,6 +44,7 @@ const notificationIcons: Record<string, React.ComponentType<{ className?: string
   enrollmentConfirmed: CheckCircle2,
   tripCancelled: X,
   tripUpdated: Info,
+  newTrip: Calendar, // Icon for new trip notifications
 };
 
 /**
@@ -61,6 +62,7 @@ const notificationColors: Record<string, string> = {
   enrollmentConfirmed: 'text-green-500',
   tripCancelled: 'text-red-500',
   tripUpdated: 'text-blue-500',
+  newTrip: 'text-primary', // Color for new trip notifications
 };
 
 /**

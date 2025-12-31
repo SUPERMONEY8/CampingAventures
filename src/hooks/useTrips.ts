@@ -71,6 +71,9 @@ export function useTrips(userId?: string): UseTripsReturn {
     staleTime: 30 * 1000, // 30 seconds - data is considered fresh for 30s
     refetchInterval: 30 * 1000, // Auto-refetch every 30 seconds (subtle background refresh)
     refetchIntervalInBackground: true, // Continue refetching even when tab is in background
+    refetchOnWindowFocus: false, // Don't refetch on window focus to avoid flicker
+    refetchOnMount: false, // Don't refetch on mount if data is fresh
+    refetchOnReconnect: true, // Only refetch on reconnect
   });
 
   // Subtle refresh function that doesn't show loading state

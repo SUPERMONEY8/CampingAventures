@@ -10,7 +10,6 @@ import {
   collection,
   query,
   where,
-  orderBy,
   limit,
   onSnapshot,
   type DocumentData,
@@ -118,10 +117,10 @@ export function useNotifications(
     if (!userId || !enabled) return;
 
     const notificationsRef = collection(db, 'notifications');
+    // Fetch without orderBy to avoid index requirement, we'll sort in memory
     const q = query(
       notificationsRef,
       where('userId', '==', userId),
-      orderBy('createdAt', 'desc'),
       limit(50)
     );
 
@@ -147,6 +146,9 @@ export function useNotifications(
             unread++;
           }
         });
+
+        // Sort by createdAt in memory (descending - newest first)
+        notificationsData.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
         setNotifications(notificationsData);
         setUnreadCount(unread);
