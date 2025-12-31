@@ -229,17 +229,17 @@ export function InscriptionModal({ open, onClose, trip, onSuccess }: Inscription
         proofUrl = 'pending';
       }
 
-      // Prepare enrollment data
+      // Prepare enrollment data - only include defined fields
       const enrollmentData: EnrollmentData = {
         acceptedTerms: formData.acceptedTerms || false,
-        dietaryPreference: formData.dietaryPreference,
-        tshirtSize: formData.tshirtSize,
-        needsTransport: formData.needsTransport,
-        transportPickupPoint: formData.transportPickupPoint,
-        additionalQuestions: formData.additionalQuestions,
+        dietaryPreference: formData.dietaryPreference || 'omnivore',
+        ...(formData.tshirtSize && { tshirtSize: formData.tshirtSize }),
+        needsTransport: formData.needsTransport || false,
+        ...(formData.transportPickupPoint && { transportPickupPoint: formData.transportPickupPoint }),
+        ...(formData.additionalQuestions && { additionalQuestions: formData.additionalQuestions }),
         medicalInfoConfirmed: formData.medicalInfoConfirmed || false,
         paymentMethod: paymentMethod as PaymentMethod,
-        transactionNumber: transactionNumber || undefined,
+        ...(transactionNumber && { transactionNumber }),
         totalAmount: formData.totalAmount || trip.price || 0,
       };
 

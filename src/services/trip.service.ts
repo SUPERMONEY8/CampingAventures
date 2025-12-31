@@ -273,19 +273,40 @@ export async function enrollToTrip(
     // Generate reservation number
     const reservationNumber = `RES-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
 
-    // Create enrollment document
-    const enrollmentRef = await addDoc(collection(db, 'enrollments'), {
+    // Create enrollment document - remove undefined fields
+    const enrollmentDocData: Record<string, unknown> = {
       tripId,
       userId,
       userName: userData.name,
       userEmail: userData.email,
       status: 'pending',
       enrollmentDate: Timestamp.now(),
-      ...enrollmentData,
       reservationNumber,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
-    });
+      acceptedTerms: enrollmentData.acceptedTerms,
+      dietaryPreference: enrollmentData.dietaryPreference,
+      needsTransport: enrollmentData.needsTransport,
+      medicalInfoConfirmed: enrollmentData.medicalInfoConfirmed,
+      paymentMethod: enrollmentData.paymentMethod,
+      totalAmount: enrollmentData.totalAmount,
+    };
+
+    // Only add optional fields if they exist
+    if (enrollmentData.tshirtSize) {
+      enrollmentDocData.tshirtSize = enrollmentData.tshirtSize;
+    }
+    if (enrollmentData.transportPickupPoint) {
+      enrollmentDocData.transportPickupPoint = enrollmentData.transportPickupPoint;
+    }
+    if (enrollmentData.additionalQuestions) {
+      enrollmentDocData.additionalQuestions = enrollmentData.additionalQuestions;
+    }
+    if (enrollmentData.transactionNumber) {
+      enrollmentDocData.transactionNumber = enrollmentData.transactionNumber;
+    }
+
+    const enrollmentRef = await addDoc(collection(db, 'enrollments'), enrollmentDocData);
 
     // Add user to trip participants
     const tripRef = doc(db, 'trips', tripId);

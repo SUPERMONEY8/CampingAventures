@@ -87,12 +87,14 @@ export function AdminLayout() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto relative">
         {/* Top Bar with Notifications */}
-        <div className="sticky top-0 z-20 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-end">
+        <div className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-end shadow-sm">
           <AdminNotificationBell />
         </div>
-        <Outlet />
+        <div className="p-6">
+          <Outlet />
+        </div>
       </main>
     </div>
   );
