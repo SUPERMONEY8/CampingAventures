@@ -12,7 +12,6 @@ import {
   LayoutDashboard,
   MapPin,
   User,
-  Settings,
   X,
   Moon,
   Sun,
@@ -93,7 +92,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     { icon: LayoutDashboard, label: 'Tableau de bord', path: '/dashboard' },
     { icon: MapPin, label: 'Mes sorties', path: '/trips' },
     { icon: User, label: 'Profil', path: '/profile' },
-    { icon: Settings, label: 'Paramètres', path: '/settings' },
   ];
 
   /**

@@ -10,7 +10,6 @@ import {
   Users,
   MapPin,
   MessageSquare,
-  Settings,
   BarChart3,
   FileText,
   LogOut,
@@ -32,7 +31,6 @@ export function AdminLayout() {
     { path: '/admin/reviews', label: 'Avis', icon: MessageSquare },
     { path: '/admin/analytics', label: 'Analytiques', icon: BarChart3 },
     { path: '/admin/reports', label: 'Rapports', icon: FileText },
-    { path: '/admin/settings', label: 'Paramètres', icon: Settings },
   ];
 
   const handleSignOut = async (): Promise<void> => {

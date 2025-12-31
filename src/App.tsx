@@ -62,7 +62,7 @@ function App() {
                         <Route path="/community" element={<CommunityFeedPage />} />
                         <Route path="/feed" element={<CommunityFeedPage />} />
                         <Route path="/profile" element={<ProfilePage />} />
-                        <Route path="/settings" element={<ProfilePage />} />
+                        <Route path="/settings" element={<Navigate to="/profile" replace />} />
                       </Route>
 
                       {/* Admin routes with AdminLayout */}

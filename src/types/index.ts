@@ -766,12 +766,13 @@ export interface UserGrowthDataPoint {
  */
 export interface AdminAlert {
   id: string;
-  type: 'sos' | 'underbooked' | 'negative_review' | 'pending_payment' | 'other';
+  type: 'sos' | 'underbooked' | 'negative_review' | 'pending_payment' | 'enrollment' | 'other';
   priority: 'low' | 'medium' | 'high' | 'critical';
   title: string;
   message: string;
   tripId?: string;
   userId?: string;
+  enrollmentId?: string;
   timestamp: Date;
   resolved: boolean;
 }

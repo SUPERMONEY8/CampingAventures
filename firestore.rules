@@ -115,6 +115,16 @@ service cloud.firestore {
       allow delete: if isAuthenticated() && 
                        (request.auth.uid == resource.data.userId || isAdmin());
     }
+    
+    // Admin Alerts collection
+    // Read: Only admins can read
+    // Write: System can create alerts
+    match /adminAlerts/{alertId} {
+      allow read: if isAdmin();
+      allow create: if isAuthenticated(); // Any authenticated user can create (system creates enrollment alerts)
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
   }
 }
 

@@ -9,6 +9,7 @@ import {
   query,
   where,
   getDocs,
+  addDoc,
   orderBy,
   limit,
   Timestamp,
@@ -381,11 +382,60 @@ export async function getUserGrowthData(): Promise<UserGrowthDataPoint[]> {
 }
 
 /**
+ * Create admin alert for new enrollment
+ */
+export async function createEnrollmentAlert(
+  userName: string,
+  tripId: string,
+  tripTitle: string,
+  paymentMethod: string,
+  enrollmentId: string
+): Promise<void> {
+  try {
+    const adminAlertsRef = collection(db, 'adminAlerts');
+    await addDoc(adminAlertsRef, {
+      type: 'enrollment',
+      priority: 'medium',
+      title: 'Nouvelle inscription',
+      message: `${userName} vient de s'inscrire à "${tripTitle}" avec le mode de paiement: ${paymentMethod}`,
+      tripId,
+      enrollmentId,
+      timestamp: Timestamp.now(),
+      resolved: false,
+      createdAt: Timestamp.now(),
+    });
+  } catch (error) {
+    console.error('Error creating enrollment alert:', error);
+    // Don't throw - alert creation failure shouldn't prevent enrollment
+  }
+}
+
+/**
  * Get admin alerts
  */
 export async function getAdminAlerts(): Promise<AdminAlert[]> {
   try {
     const alerts: AdminAlert[] = [];
+
+    // Get enrollment alerts from adminAlerts collection
+    const adminAlertsRef = collection(db, 'adminAlerts');
+    const adminAlertsSnapshot = await getDocs(adminAlertsRef);
+    adminAlertsSnapshot.forEach((doc) => {
+      const data = doc.data() as DocumentData;
+      if (data.resolved !== true) {
+        alerts.push({
+          id: doc.id,
+          type: data.type === 'enrollment' ? 'other' : (data.type as AdminAlert['type']),
+          priority: data.priority || 'medium',
+          title: data.title || 'Alerte',
+          message: data.message || '',
+          tripId: data.tripId,
+          userId: data.userId,
+          timestamp: data.timestamp?.toDate ? data.timestamp.toDate() : new Date(data.timestamp || Date.now()),
+          resolved: data.resolved === true,
+        });
+      }
+    });
 
     // Check for active SOS alerts - filter in memory to avoid index
     const sosRef = collection(db, 'sosAlerts');
