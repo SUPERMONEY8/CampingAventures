@@ -42,6 +42,7 @@ import { Modal } from '../components/ui/Modal';
 import { Breadcrumb } from '../components/navigation/Breadcrumb';
 import { InscriptionModal } from '../components/trip/InscriptionModal';
 import { formatDate } from '../utils/date';
+import { useAuth } from '../hooks/useAuth';
 import type { TripReview, EquipmentItem, DayItinerary, WeatherForecast } from '../types';
 
 /**
@@ -61,6 +62,7 @@ const weatherIcons: Record<string, React.ComponentType<{ className?: string }>> 
 export function TripDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   
   // State
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -224,7 +226,7 @@ export function TripDetailsPage() {
       <Breadcrumb
         items={[
           { label: 'Accueil', href: '/' },
-          { label: 'Explorer', href: '/explore' },
+          { label: 'Mes sorties', href: '/trips' },
           { label: trip.title },
         ]}
       />
@@ -945,8 +947,14 @@ export function TripDetailsPage() {
             <Button
               variant="primary"
               size="lg"
-              onClick={() => setInscriptionModalOpen(true)}
-              disabled={availableSpots === 0}
+              onClick={() => {
+                if (user?.role === 'admin') {
+                  alert('Les administrateurs ne peuvent pas s\'inscrire aux sorties.');
+                  return;
+                }
+                setInscriptionModalOpen(true);
+              }}
+              disabled={availableSpots === 0 || user?.role === 'admin'}
               className="flex-1 sm:flex-none"
             >
               S'inscrire maintenant

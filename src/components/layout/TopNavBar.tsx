@@ -109,8 +109,8 @@ export function TopNavBar({ onMenuClick }: TopNavBarProps) {
 
           {/* Right Section: Notifications + Avatar */}
           <div className="flex items-center gap-2 md:gap-3">
-            {/* Notifications */}
-            {user && (
+            {/* Notifications - Only show for non-admin users */}
+            {user && user.role !== 'admin' && (
               <div className="relative" ref={notificationsRef}>
                 <button
                   onClick={() => setNotificationsOpen(!notificationsOpen)}

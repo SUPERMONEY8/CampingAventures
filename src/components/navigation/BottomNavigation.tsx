@@ -63,8 +63,8 @@ const defaultItems: BottomNavItem[] = [
   },
   {
     id: 'explore',
-    label: 'Explorer',
-    path: '/explore',
+    label: 'Mes sorties',
+    path: '/trips',
     icon: Compass,
   },
   {

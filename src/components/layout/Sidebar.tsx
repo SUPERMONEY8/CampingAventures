@@ -11,7 +11,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard,
   MapPin,
-  Compass,
   User,
   Settings,
   X,
@@ -93,7 +92,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const menuItems: MenuItem[] = [
     { icon: LayoutDashboard, label: 'Tableau de bord', path: '/dashboard' },
     { icon: MapPin, label: 'Mes sorties', path: '/trips' },
-    { icon: Compass, label: 'Explorer', path: '/explore' },
     { icon: User, label: 'Profil', path: '/profile' },
     { icon: Settings, label: 'Paramètres', path: '/settings' },
   ];

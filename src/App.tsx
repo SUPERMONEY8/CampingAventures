@@ -6,7 +6,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { Home } from './pages/Home';
 import { DashboardPage } from './pages/DashboardPage';
 import { ProfilePage } from './pages/ProfilePage';
-import { ExplorePage } from './pages/ExplorePage';
+import { TripsPage } from './pages/TripsPage';
 import { TripDetailsPage } from './pages/TripDetailsPage';
 import { UpcomingTripPage } from './pages/UpcomingTripPage';
 import { LiveTripPage } from './pages/LiveTripPage';
@@ -53,8 +53,7 @@ function App() {
           >
             <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/trips" element={<DashboardPage />} />
-            <Route path="/explore" element={<ExplorePage />} />
+            <Route path="/trips" element={<TripsPage />} />
             <Route path="/trips/:id" element={<TripDetailsPage />} />
                         <Route path="/trips/:id/prepare" element={<UpcomingTripPage />} />
                         <Route path="/trips/:id/live" element={<LiveTripPage />} />

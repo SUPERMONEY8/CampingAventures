@@ -80,6 +80,14 @@ export function InscriptionModal({ open, onClose, trip, onSuccess }: Inscription
   const { user } = useAuth();
   const { data: userProfile } = useUserProfile(user?.id);
   
+  // Prevent admin from enrolling
+  useEffect(() => {
+    if (user?.role === 'admin') {
+      alert('Les administrateurs ne peuvent pas s\'inscrire aux sorties.');
+      onClose();
+    }
+  }, [user?.role, onClose]);
+  
   // State
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);

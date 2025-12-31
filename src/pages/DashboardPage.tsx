@@ -357,9 +357,9 @@ export function DashboardPage() {
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Explorez les sorties disponibles et rejoignez une aventure !
             </p>
-            <Link to="/explore">
+            <Link to="/trips">
               <Button variant="primary" icon={Compass}>
-                Explorer les sorties
+                Voir toutes les sorties
               </Button>
             </Link>
           </Card>

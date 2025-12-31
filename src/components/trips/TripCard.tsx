@@ -312,6 +312,7 @@ export function TripCard({
                   size="sm"
                   onClick={() => onRegister(trip.id)}
                   className="flex-1"
+                  disabled={false} // Will be checked in parent component
                 >
                   S'inscrire
                 </Button>
