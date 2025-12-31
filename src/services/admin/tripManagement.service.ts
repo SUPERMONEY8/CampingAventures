@@ -125,9 +125,9 @@ export async function createTrip(tripData: TripFormData): Promise<Trip> {
       notIncluded: tripData.notIncluded,
       accommodation: tripData.accommodation,
       meals: tripData.meals,
-      itinerary: tripData.itinerary.map((day) => ({
+      itinerary: (tripData.itinerary || []).map((day) => ({
         ...day,
-        date: Timestamp.fromDate(day.date),
+        date: day.date ? Timestamp.fromDate(day.date) : Timestamp.now(),
       })),
       equipment: tripData.equipment,
       images: tripData.images,

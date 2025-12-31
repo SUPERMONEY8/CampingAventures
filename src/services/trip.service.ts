@@ -45,13 +45,10 @@ export async function getTripById(tripId: string): Promise<Trip | null> {
 
     const data = tripDocSnap.data() as DocumentData;
     
-    // Validate required fields
+    // Validate required fields - but be more lenient for new trips
     if (!data.date) {
-      throw new Error('Le champ "date" est obligatoire (type: timestamp)');
-    }
-    
-    if (!data.location || !data.location.coordinates) {
-      throw new Error('Le champ "location.coordinates" est obligatoire (map avec lat et lng)');
+      console.warn('Trip missing date field, using current date');
+      data.date = Timestamp.now();
     }
 
     // Normalize status
@@ -108,11 +105,78 @@ export async function getTripById(tripId: string): Promise<Trip | null> {
     }
 
     // Convert Firestore timestamps to Date objects
+    // Handle itinerary dates conversion
+    let itinerary: any[] = [];
+    if (data.itinerary && Array.isArray(data.itinerary)) {
+      itinerary = data.itinerary.map((day: any) => {
+        if (day.date && day.date.toDate) {
+          return { ...day, date: day.date.toDate() };
+        }
+        if (day.date) {
+          return { ...day, date: new Date(day.date) };
+        }
+        return day;
+      });
+    }
+
+    // Convert endDate safely
+    let endDate: Date | undefined;
+    if (data.endDate) {
+      if (data.endDate.toDate) {
+        endDate = data.endDate.toDate();
+      } else {
+        try {
+          endDate = new Date(data.endDate);
+          // Check if date is valid
+          if (isNaN(endDate.getTime())) {
+            endDate = undefined;
+          }
+        } catch {
+          endDate = undefined;
+        }
+      }
+    }
+
+    // Convert date safely
+    let tripDate: Date;
+    if (data.date?.toDate) {
+      tripDate = data.date.toDate();
+    } else {
+      try {
+        tripDate = new Date(data.date);
+        if (isNaN(tripDate.getTime())) {
+          throw new Error('Invalid date format');
+        }
+      } catch {
+        throw new Error('Le champ "date" est obligatoire et doit être une date valide');
+      }
+    }
+
+    // Ensure location coordinates exist
+    if (!data.location || !data.location.coordinates) {
+      // Try to get from meetingPoint if location is missing
+      if (data.meetingPoint && data.meetingPoint.coordinates) {
+        data.location = {
+          name: data.meetingPoint.name || data.location?.name || '',
+          coordinates: data.meetingPoint.coordinates,
+        };
+      } else {
+        // Set default coordinates if missing
+        data.location = {
+          name: data.location?.name || data.meetingPoint?.name || '',
+          coordinates: {
+            lat: data.location?.coordinates?.lat || data.meetingPoint?.coordinates?.lat || 0,
+            lng: data.location?.coordinates?.lng || data.meetingPoint?.coordinates?.lng || 0,
+          },
+        };
+      }
+    }
+
     const trip: Trip = {
       id: tripDocSnap.id,
       title: data.title || '',
-      date: data.date?.toDate ? data.date.toDate() : new Date(data.date),
-      endDate: data.endDate?.toDate ? data.endDate.toDate() : (data.endDate ? new Date(data.endDate) : undefined),
+      date: tripDate,
+      endDate: endDate,
       duration: duration as number | undefined,
       location: {
         name: data.location?.name || '',
@@ -122,17 +186,17 @@ export async function getTripById(tripId: string): Promise<Trip | null> {
         },
       },
       difficulty: data.difficulty || 'débutant',
-      maxParticipants: maxParticipants as number,
+      maxParticipants: maxParticipants as number || 1,
       participants: data.participants || [],
       status: status as 'upcoming' | 'ongoing' | 'completed' | 'cancelled',
-      description: data.description,
-      longDescription: data.longDescription,
+      description: data.description || data.shortDescription || '',
+      longDescription: data.longDescription || data.description || '',
       activities: data.activities || [],
-      itinerary: data.itinerary || [],
+      itinerary: itinerary,
       images: images,
       price: price as number | undefined,
       accommodation: data.accommodation || 'tente',
-      meals: data.meals || [],
+      meals: Array.isArray(data.meals) ? data.meals : (data.meals ? [data.meals] : []),
       included: data.included || [],
       notIncluded: data.notIncluded || [],
       highlights: data.highlights || [],
@@ -142,6 +206,7 @@ export async function getTripById(tripId: string): Promise<Trip | null> {
       reviews: data.reviews || [],
       averageRating: data.averageRating,
       totalReviews: data.totalReviews,
+      visible: data.visible !== false,
       createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt || Date.now()),
       updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt || Date.now()),
     } as Trip;
