@@ -5,6 +5,7 @@
  */
 
 import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Calendar,
@@ -74,6 +75,23 @@ export function DashboardPage() {
   const progress = progressResult.progress;
   const progressLoading = progressResult.loading || false;
 
+  // Debug: Log trips for troubleshooting
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      console.log('Dashboard trips:', {
+        totalTrips: tripsResult.trips?.length || 0,
+        upcomingTrips: upcomingTrips.length,
+        trips: tripsResult.trips?.map(t => ({
+          id: t.id,
+          title: t.title,
+          date: t.date,
+          status: t.status,
+          visible: t.visible,
+        })) || [],
+      });
+    }
+  }, [tripsResult.trips, upcomingTrips]);
+
   // Get next trip
   const nextTrip = upcomingTrips.length > 0 ? upcomingTrips[0] : null;
   const countdown = nextTrip ? getCountdown(nextTrip.date) : null;
@@ -124,16 +142,21 @@ export function DashboardPage() {
   ];
 
   // Get recommended trips (simple algorithm: match interests + physical level)
-  const recommendedTrips: Trip[] = upcomingTrips
-    .filter((trip) => {
-      if (!user) return false;
-      // Simple matching: same physical level or one level below
-      const levelMap = { débutant: 1, intermédiaire: 2, avancé: 3 };
-      const userLevelNum = levelMap[user.physicalLevel] || 1;
+  // If no matching trips, show all upcoming trips
+  const recommendedTrips: Trip[] = (() => {
+    if (!user) return upcomingTrips.slice(0, 3);
+    
+    const levelMap: Record<string, number> = { débutant: 1, intermédiaire: 2, avancé: 3 };
+    const userLevelNum = levelMap[user.physicalLevel] || 1;
+    
+    const matched = upcomingTrips.filter((trip) => {
       const tripLevelNum = levelMap[trip.difficulty] || 1;
       return tripLevelNum <= userLevelNum + 1;
-    })
-    .slice(0, 3);
+    });
+    
+    // If we have matched trips, return them, otherwise return all trips
+    return matched.length > 0 ? matched.slice(0, 3) : upcomingTrips.slice(0, 3);
+  })();
 
 
   const loading = tripsLoading || progressLoading;

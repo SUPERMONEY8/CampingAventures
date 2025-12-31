@@ -59,9 +59,12 @@ export function useTripsFilter(
             id: doc.id,
             ...data,
             date: data.date?.toDate ? data.date.toDate() : new Date(data.date),
+            endDate: data.endDate?.toDate ? data.endDate.toDate() : undefined,
             createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt || Date.now()),
             updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt || Date.now()),
             participants: data.participants || [],
+            visible: data.visible !== false, // Default to true if not set
+            status: data.status || 'upcoming',
           } as Trip);
         });
 
