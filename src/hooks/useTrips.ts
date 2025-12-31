@@ -22,6 +22,9 @@ interface UseTripsReturn {
 
 /**
  * Custom hook to fetch trips
+ * 
+ * @param userId - Optional user ID. If provided, fetches all visible trips (not just user's trips)
+ *                 Use getUserTrips() if you need only trips where user is a participant
  */
 export function useTrips(userId?: string): UseTripsReturn {
   const [trips, setTrips] = useState<Trip[]>([]);
@@ -30,6 +33,7 @@ export function useTrips(userId?: string): UseTripsReturn {
 
   /**
    * Fetch trips from Firestore
+   * Always fetches all visible trips, regardless of userId
    */
   const fetchTrips = async (): Promise<void> => {
     try {
@@ -37,16 +41,8 @@ export function useTrips(userId?: string): UseTripsReturn {
       setError(null);
 
       const tripsRef = collection(db, 'trips');
-      let q = query(tripsRef, orderBy('date', 'asc'));
-
-      // Filter by user participation if userId provided
-      // Note: This requires a composite index in Firestore
-      // For now, we'll fetch all trips and filter in memory to avoid index error
-      if (userId) {
-        // Fetch all trips and filter by participants in memory
-        // This avoids the need for a composite index
-        q = query(tripsRef, orderBy('date', 'asc'));
-      }
+      // Fetch all trips - we'll filter by visibility in memory
+      const q = query(tripsRef, orderBy('date', 'asc'));
 
       const querySnapshot = await getDocs(q);
       const tripsData: Trip[] = [];
@@ -57,20 +53,17 @@ export function useTrips(userId?: string): UseTripsReturn {
           id: doc.id,
           ...data,
           date: data.date?.toDate ? data.date.toDate() : new Date(data.date),
+          endDate: data.endDate?.toDate ? data.endDate.toDate() : undefined,
           createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt || Date.now()),
           updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt || Date.now()),
           participants: data.participants || [],
+          visible: data.visible !== false, // Default to true if not set
+          status: data.status || 'upcoming',
         } as Trip;
 
-        // Filter by userId in memory if provided
-        if (userId) {
-          const participantIds = trip.participants.map((p: { userId?: string; id?: string }) => p.userId || p.id || p);
-          if (participantIds.includes(userId)) {
-            tripsData.push(trip);
-          }
-        } else {
-          tripsData.push(trip);
-        }
+        // Always include all trips - visibility filtering happens in upcomingTrips
+        // This allows users to see all available trips, not just ones they're registered for
+        tripsData.push(trip);
       });
 
       setTrips(tripsData);

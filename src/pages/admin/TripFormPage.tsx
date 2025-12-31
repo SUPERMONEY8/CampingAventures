@@ -194,6 +194,8 @@ export function TripFormPage() {
     mutationFn: createTrip,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminTrips'] });
+      queryClient.invalidateQueries({ queryKey: ['trips'] }); // Invalidate trips cache for users
+      queryClient.invalidateQueries({ queryKey: ['trips', 'all'] }); // Invalidate trips filter cache
       navigate('/admin/trips');
     },
   });
@@ -203,6 +205,9 @@ export function TripFormPage() {
       updateTrip(tripId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminTrips'] });
+      queryClient.invalidateQueries({ queryKey: ['trips'] }); // Invalidate trips cache for users
+      queryClient.invalidateQueries({ queryKey: ['trips', 'all'] }); // Invalidate trips filter cache
+      queryClient.invalidateQueries({ queryKey: ['trip'] }); // Invalidate single trip cache
       navigate('/admin/trips');
     },
   });
