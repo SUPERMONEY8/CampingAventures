@@ -968,7 +968,6 @@ export function TripDetailsPage() {
               size="lg"
               onClick={() => {
                 if (user?.role === 'admin') {
-                  alert('Les administrateurs ne peuvent pas s\'inscrire aux sorties.');
                   return;
                 }
                 setInscriptionModalOpen(true);

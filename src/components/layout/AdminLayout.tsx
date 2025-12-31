@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { signOut } from '../../services/auth.service';
+import { AdminNotificationBell } from '../admin/AdminNotificationBell';
 
 /**
  * AdminLayout Component
@@ -87,6 +88,10 @@ export function AdminLayout() {
 
       {/* Main Content */}
       <main className="flex-1 overflow-auto">
+        {/* Top Bar with Notifications */}
+        <div className="sticky top-0 z-20 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-end">
+          <AdminNotificationBell />
+        </div>
         <Outlet />
       </main>
     </div>

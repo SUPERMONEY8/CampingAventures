@@ -80,10 +80,9 @@ export function InscriptionModal({ open, onClose, trip, onSuccess }: Inscription
   const { user } = useAuth();
   const { data: userProfile } = useUserProfile(user?.id);
   
-  // Prevent admin from enrolling
+  // Prevent admin from enrolling (silently)
   useEffect(() => {
     if (user?.role === 'admin') {
-      alert('Les administrateurs ne peuvent pas s\'inscrire aux sorties.');
       onClose();
     }
   }, [user?.role, onClose]);
@@ -324,6 +323,25 @@ export function InscriptionModal({ open, onClose, trip, onSuccess }: Inscription
       closeOnBackdropClick={currentStep === 5}
     >
       <div className="space-y-6">
+        {/* Error Message */}
+        {error && (
+          <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="font-semibold text-red-900 dark:text-red-200">Erreur</p>
+                <p className="text-sm text-red-700 dark:text-red-300 mt-1">{error}</p>
+              </div>
+              <button
+                onClick={() => setError(null)}
+                className="text-red-500 hover:text-red-700"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Progress Bar */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">

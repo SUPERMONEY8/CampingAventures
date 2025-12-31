@@ -60,7 +60,7 @@ export function TripsPage() {
   const handleRegister = (tripId: string): void => {
     // Prevent admin from registering
     if (user?.role === 'admin') {
-      alert('Les administrateurs ne peuvent pas s\'inscrire aux sorties.');
+      // Admin cannot enroll - silently return
       return;
     }
     navigate(`/trips/${tripId}`);
