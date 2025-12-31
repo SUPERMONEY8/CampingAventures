@@ -601,7 +601,7 @@ export function TripDetailsPage() {
           >
             <Card title="Prévisions Météo" className="mb-6">
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-4">
-                {trip.weatherForecast.map((forecast: WeatherForecast, idx: number) => {
+                {(trip.weatherForecast || []).map((forecast: WeatherForecast, idx: number) => {
                   const WeatherIcon = weatherIcons[forecast.condition] || Cloud;
                   return (
                     <div
@@ -640,7 +640,7 @@ export function TripDetailsPage() {
             <Card title="Équipement Recommandé" className="mb-6">
               <div className="space-y-4">
                 {['clothing', 'gear', 'food', 'safety', 'other'].map((category) => {
-                  const categoryItems = trip.equipment!.filter(
+                  const categoryItems = (trip.equipment || []).filter(
                     (item: EquipmentItem) => item.category === category
                   );
                   if (categoryItems.length === 0) return null;
