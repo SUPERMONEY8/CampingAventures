@@ -5,6 +5,7 @@
  */
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
   TrendingUp,
@@ -56,6 +57,7 @@ import type { Trip } from '../../types';
  * AdminDashboardPage Component
  */
 export function AdminDashboardPage() {
+  const navigate = useNavigate();
   const [revenuePeriod, setRevenuePeriod] = useState<'month' | 'week' | 'year'>('month');
 
   // Fetch all data
@@ -471,10 +473,20 @@ export function AdminDashboardPage() {
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex gap-2">
-                          <Button variant="ghost" size="sm" icon={Eye}>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            icon={Eye}
+                            onClick={() => navigate(`/trips/${trip.id}`)}
+                          >
                             Voir
                           </Button>
-                          <Button variant="ghost" size="sm" icon={Edit}>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            icon={Edit}
+                            onClick={() => navigate(`/admin/trips/${trip.id}/edit`)}
+                          >
                             Éditer
                           </Button>
                         </div>

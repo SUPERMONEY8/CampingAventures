@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { requestNotificationPermission } from './services/pushNotification.service'
 import './index.css'
 import App from './App.tsx'
 
@@ -19,6 +20,14 @@ const queryClient = new QueryClient({
     },
   },
 })
+
+// Request notification permission on app start
+if ('Notification' in window && Notification.permission === 'default') {
+  // Request permission after a short delay to avoid blocking initial render
+  setTimeout(() => {
+    requestNotificationPermission().catch(console.error);
+  }, 2000);
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

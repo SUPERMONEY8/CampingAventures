@@ -17,6 +17,7 @@ import {
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { db, storage } from '../firebase';
+import { notifyNewTrip } from '../pushNotification.service';
 import type { Trip, DayItinerary, EquipmentItem } from '../../types';
 
 /**
@@ -159,7 +160,7 @@ export async function createTrip(tripData: TripFormData): Promise<Trip> {
     const createdDoc = await getDoc(docRef);
     const data = createdDoc.data() as DocumentData;
     
-    return {
+    const createdTrip = {
       id: docRef.id,
       ...data,
       date: data.date?.toDate ? data.date.toDate() : new Date(data.date),
@@ -167,6 +168,16 @@ export async function createTrip(tripData: TripFormData): Promise<Trip> {
       createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
       updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : new Date(data.updatedAt),
     } as Trip;
+
+    // Notify all users about the new trip (only if visible)
+    if (createdTrip.visible !== false) {
+      notifyNewTrip(createdTrip).catch((error) => {
+        console.error('Error sending notifications:', error);
+        // Don't throw - notification failure shouldn't prevent trip creation
+      });
+    }
+    
+    return createdTrip;
   } catch (error) {
     console.error('Error creating trip:', error);
     throw new Error('Failed to create trip: ' + (error as Error).message);

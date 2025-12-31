@@ -4,8 +4,7 @@
  * Main user dashboard with stats, next trip, activity timeline, and recommendations.
  */
 
-import { } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Calendar,
@@ -64,6 +63,7 @@ interface ActivityItem {
  */
 export function DashboardPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   
   // Use hooks directly - they handle errors internally
   const tripsResult = useTrips(user?.id);
@@ -452,7 +452,12 @@ export function DashboardPage() {
                     <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                       {trip.participants.length}/{trip.maxParticipants} participants
                     </span>
-                    <Button variant="ghost" size="sm" icon={ArrowRight}>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      icon={ArrowRight}
+                      onClick={() => navigate(`/trips/${trip.id}`)}
+                    >
                       Voir
                     </Button>
                   </div>
