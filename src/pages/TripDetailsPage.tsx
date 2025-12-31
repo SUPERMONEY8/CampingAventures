@@ -8,7 +8,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   MapPin,
   Calendar,
@@ -41,6 +41,7 @@ import { Badge } from '../components/ui/Badge';
 import { Modal } from '../components/ui/Modal';
 import { Breadcrumb } from '../components/navigation/Breadcrumb';
 import { InscriptionModal } from '../components/trip/InscriptionModal';
+import { CreateReviewModal } from '../components/trip/CreateReviewModal';
 import { formatDate } from '../utils/date';
 import { useAuth } from '../hooks/useAuth';
 import type { TripReview, EquipmentItem, DayItinerary, WeatherForecast } from '../types';
@@ -63,6 +64,7 @@ export function TripDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   
   // State
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -74,6 +76,7 @@ export function TripDetailsPage() {
   const [reviewFilter, setReviewFilter] = useState<number | null>(null);
   const [equipmentChecked, setEquipmentChecked] = useState<Set<string>>(new Set());
   const [inscriptionModalOpen, setInscriptionModalOpen] = useState(false);
+  const [createReviewModalOpen, setCreateReviewModalOpen] = useState(false);
 
   // Refs for smooth scroll
   const sectionsRef = useRef<Record<string, HTMLDivElement>>({});
@@ -794,12 +797,23 @@ export function TripDetailsPage() {
         )}
 
         {/* Reviews Section */}
-        {trip.reviews && trip.reviews.length > 0 && (
-          <section 
-            ref={(el) => { if (el) sectionsRef.current['reviews'] = el as HTMLDivElement; }}
-            className="mb-12"
+        <section 
+          ref={(el) => { if (el) sectionsRef.current['reviews'] = el as HTMLDivElement; }}
+          className="mb-12"
+        >
+          <Card 
+            title="Avis & Notes" 
+            className="mb-6"
+            actions={
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCreateReviewModalOpen(true)}
+              >
+                Laisser un avis
+              </Button>
+            }
           >
-            <Card title="Avis & Notes" className="mb-6">
               {/* Rating Summary */}
               <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
                 <div className="text-center">
@@ -819,7 +833,7 @@ export function TripDetailsPage() {
                     ))}
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    {trip.reviews.length} avis
+                    {trip.reviews?.length || 0} avis
                   </p>
                 </div>
 
@@ -855,8 +869,9 @@ export function TripDetailsPage() {
               </div>
 
               {/* Reviews List */}
-              <div className="space-y-6">
-                {filteredReviews.map((review: TripReview) => (
+              {filteredReviews.length > 0 ? (
+                <div className="space-y-6">
+                  {filteredReviews.map((review: TripReview) => (
                   <div key={review.id} className="pb-6 border-b border-gray-200 dark:border-gray-700 last:border-0 last:pb-0">
                     <div className="flex items-start gap-4">
                       <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
@@ -911,11 +926,15 @@ export function TripDetailsPage() {
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-center text-gray-500 dark:text-gray-400 py-8">
+                  Aucun avis pour le moment. Soyez le premier à laisser un avis !
+                </p>
+              )}
             </Card>
           </section>
-        )}
       </div>
 
       {/* CTA Section - Sticky on mobile */}
@@ -1043,10 +1062,19 @@ export function TripDetailsPage() {
           open={inscriptionModalOpen}
           onClose={() => setInscriptionModalOpen(false)}
           trip={trip}
-          onSuccess={(enrollmentId) => {
-            console.log('Enrollment successful:', enrollmentId);
-            // Refresh trip data or show success message
+          onSuccess={() => {
+            queryClient.invalidateQueries({ queryKey: ['trip', id] });
           }}
+        />
+      )}
+
+      {/* Create Review Modal */}
+      {trip && (
+        <CreateReviewModal
+          open={createReviewModalOpen}
+          onClose={() => setCreateReviewModalOpen(false)}
+          tripId={trip.id}
+          tripTitle={trip.title}
         />
       )}
     </div>
