@@ -89,11 +89,15 @@ export function useTrips(userId?: string): UseTripsReturn {
 
   /**
    * Get upcoming trips
+   * Filter by status, date, and visibility
    */
   const upcomingTrips = trips.filter(
-    (trip) =>
-      trip.status === 'upcoming' &&
-      new Date(trip.date) >= new Date()
+    (trip) => {
+      const isUpcoming = trip.status === 'upcoming' || trip.status === 'ongoing';
+      const isFuture = new Date(trip.date) >= new Date();
+      const isVisible = trip.visible !== false; // Default to visible if not set
+      return isUpcoming && isFuture && isVisible;
+    }
   );
 
   return {

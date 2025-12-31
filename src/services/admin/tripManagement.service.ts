@@ -140,7 +140,7 @@ export async function createTrip(tripData: TripFormData): Promise<Trip> {
       waterPoints: tripData.waterPoints || [],
       dangerZones: tripData.dangerZones || [],
       pointsOfInterest: tripData.pointsOfInterest || [],
-      visible: tripData.visible,
+      visible: tripData.visible !== false, // Default to true if not set
       enrollmentDeadline: tripData.enrollmentDeadline
         ? Timestamp.fromDate(tripData.enrollmentDeadline)
         : null,

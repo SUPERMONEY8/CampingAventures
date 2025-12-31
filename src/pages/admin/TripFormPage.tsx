@@ -307,12 +307,12 @@ export function TripFormPage() {
         name: '',
         phone: '',
       },
-      visible: formData.visible,
+      visible: formData.visible !== false, // Default to true if not set
       enrollmentDeadline: formData.enrollmentDeadline,
       freeCancellationDays: formData.freeCancellationDays,
       cancellationRefund: formData.cancellationRefund,
       autoConfirm: formData.autoConfirm,
-      status: asDraft ? 'upcoming' : formData.status,
+      status: asDraft ? 'upcoming' : (formData.status || 'upcoming'),
     };
 
     if (isEditMode && id) {
@@ -392,11 +392,11 @@ export function TripFormPage() {
                   ? 'bg-primary-600 text-white'
                   : isCompleted
                   ? 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300'
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
               }`}
             >
-              <StepIcon className="w-4 h-4" />
-              <span className="text-sm font-medium">{step.title}</span>
+              <StepIcon className={`w-4 h-4 ${isActive ? 'text-white' : isCompleted ? 'text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`} />
+              <span className={`text-sm font-medium ${isActive ? 'text-white' : isCompleted ? 'text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>{step.title}</span>
             </button>
           );
         })}
@@ -444,12 +444,20 @@ export function TripFormPage() {
               variant="primary"
               icon={ChevronRight}
               iconPosition="right"
-              onClick={() => {
-                form.trigger().then((isValid) => {
-                  if (isValid) {
-                    setCurrentStep((s) => Math.min(steps.length, s + 1));
+              onClick={async () => {
+                // Validate only the fields for the current step
+                const fieldsToValidate = getFieldsForStep(currentStep);
+                const isValid = await form.trigger(fieldsToValidate);
+                if (isValid) {
+                  setCurrentStep((s) => Math.min(steps.length, s + 1));
+                } else {
+                  // Show error message
+                  const errors = form.formState.errors;
+                  const firstError = Object.values(errors)[0];
+                  if (firstError?.message) {
+                    alert(firstError.message);
                   }
-                });
+                }
               }}
             >
               Suivant
@@ -479,6 +487,36 @@ export function TripFormPage() {
       </Modal>
     </div>
   );
+}
+
+/**
+ * Get fields to validate for each step
+ */
+function getFieldsForStep(step: number): (keyof TripFormValues)[] {
+  switch (step) {
+    case 1:
+      return ['title', 'shortDescription', 'description', 'category'];
+    case 2:
+      return ['startDate', 'endDate', 'meetingTime', 'meetingPointName', 'difficulty', 'physicalLevel', 'minAge'];
+    case 3:
+      return ['minParticipants', 'maxParticipants', 'price', 'accommodation', 'meals'];
+    case 4:
+      return []; // Itinerary is optional
+    case 5:
+      return []; // Equipment is optional
+    case 6:
+      return []; // Media is optional but recommended
+    case 7:
+      return []; // Guide is optional
+    case 8:
+      return []; // Map is optional
+    case 9:
+      return ['visible', 'freeCancellationDays', 'cancellationRefund'];
+    case 10:
+      return []; // Summary - no validation needed
+    default:
+      return [];
+  }
 }
 
 /**

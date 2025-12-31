@@ -288,6 +288,7 @@ export interface Trip {
   reviews?: TripReview[];
   averageRating?: number;
   totalReviews?: number;
+  visible?: boolean; // Whether the trip is visible to users
   createdAt: Date;
   updatedAt: Date;
 }

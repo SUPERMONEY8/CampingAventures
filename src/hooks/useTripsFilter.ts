@@ -87,6 +87,9 @@ export function useTripsFilter(
 
     let result = [...data];
 
+    // Filter by visibility first
+    result = result.filter((trip) => trip.visible !== false);
+
     // Search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
