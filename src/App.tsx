@@ -17,7 +17,8 @@ import { AdminLayout } from './components/layout/AdminLayout';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { TripsManagementPage } from './pages/admin/TripsManagementPage';
 import { TripFormPage } from './pages/admin/TripFormPage';
-import { AdminUsersPage } from './pages/admin/AdminUsersPage';
+import { UsersManagementPage } from './pages/admin/UsersManagementPage';
+import { UserDetailPage } from './pages/admin/UserDetailPage';
 import { AdminReviewsPage } from './pages/admin/AdminReviewsPage';
 import { AdminAnalyticsPage } from './pages/admin/AdminAnalyticsPage';
 import { AdminReportsPage } from './pages/admin/AdminReportsPage';
@@ -77,7 +78,8 @@ function App() {
                         <Route path="/admin/trips" element={<TripsManagementPage />} />
                         <Route path="/admin/trips/new" element={<TripFormPage />} />
                         <Route path="/admin/trips/:id/edit" element={<TripFormPage />} />
-                        <Route path="/admin/users" element={<AdminUsersPage />} />
+                        <Route path="/admin/users" element={<UsersManagementPage />} />
+                        <Route path="/admin/users/:id" element={<UserDetailPage />} />
                         <Route path="/admin/reviews" element={<AdminReviewsPage />} />
                         <Route path="/admin/analytics" element={<AdminAnalyticsPage />} />
                         <Route path="/admin/reports" element={<AdminReportsPage />} />

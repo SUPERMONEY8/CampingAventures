@@ -42,13 +42,21 @@ export interface User {
   email: string;
   name: string;
   age: number;
+  phone?: string;
   emergencyContact: EmergencyContact;
   physicalLevel: PhysicalLevel;
   interests: Interest[];
   history: TripHistoryEntry[];
   avatarUrl?: string;
   medicalInfo?: MedicalInfo;
-  role?: 'user' | 'admin' | 'ceo';
+  role?: 'user' | 'admin' | 'ceo' | 'guide';
+  createdAt?: Date;
+  updatedAt?: Date;
+  banned?: boolean;
+  bannedUntil?: Date;
+  bannedReason?: string;
+  bannedAt?: Date;
+  active?: boolean;
 }
 
 // ============================================================================
