@@ -4,8 +4,9 @@
  * Fetches and manages trips data from Firestore.
  */
 
-import { useState, useEffect } from 'react';
+import { useCallback } from 'react';
 import { collection, query, getDocs, type DocumentData } from 'firebase/firestore';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { db } from '../services/firebase';
 import type { Trip } from '../types';
 
@@ -27,19 +28,14 @@ interface UseTripsReturn {
  *                 Use getUserTrips() if you need only trips where user is a participant
  */
 export function useTrips(userId?: string): UseTripsReturn {
-  const [trips, setTrips] = useState<Trip[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   /**
-   * Fetch trips from Firestore
-   * Always fetches all visible trips, regardless of userId
+   * Fetch trips from Firestore using React Query for better cache management
    */
-  const fetchTrips = async (): Promise<void> => {
-    try {
-      setLoading(true);
-      setError(null);
-
+  const { data: trips = [], isLoading, error: queryError } = useQuery({
+    queryKey: ['trips', userId],
+    queryFn: async (): Promise<Trip[]> => {
       const tripsRef = collection(db, 'trips');
       // Fetch all trips without orderBy to avoid index requirement
       // We'll sort in memory instead
@@ -70,28 +66,17 @@ export function useTrips(userId?: string): UseTripsReturn {
       // Sort by date in memory (ascending)
       tripsData.sort((a, b) => a.date.getTime() - b.date.getTime());
 
-      setTrips(tripsData);
-    } catch (err) {
-      const error = err as Error;
-      console.error('Error fetching trips:', error);
-      setError('Erreur lors du chargement des sorties');
-    } finally {
-      setLoading(false);
-    }
-  };
+      return tripsData;
+    },
+    staleTime: 30 * 1000, // 30 seconds - data is considered fresh for 30s
+    refetchInterval: 30 * 1000, // Auto-refetch every 30 seconds (subtle background refresh)
+    refetchIntervalInBackground: true, // Continue refetching even when tab is in background
+  });
 
-  useEffect(() => {
-    fetchTrips();
-  }, [userId]);
-
-  // Refresh trips every 30 seconds to catch new trips
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetchTrips();
-    }, 30000); // 30 seconds
-
-    return () => clearInterval(interval);
-  }, []);
+  // Subtle refresh function that doesn't show loading state
+  const refresh = useCallback(async () => {
+    await queryClient.refetchQueries({ queryKey: ['trips', userId] });
+  }, [queryClient, userId]);
 
   /**
    * Get upcoming trips
@@ -129,9 +114,9 @@ export function useTrips(userId?: string): UseTripsReturn {
   return {
     trips,
     upcomingTrips,
-    loading,
-    error,
-    refresh: fetchTrips,
+    loading: isLoading,
+    error: queryError ? (queryError as Error).message : null,
+    refresh,
   };
 }
 

@@ -101,6 +101,20 @@ service cloud.firestore {
                      request.auth.uid == resource.data.userId;
       allow write: if false; // Only Cloud Functions can write
     }
+    
+    // Notifications collection
+    // Read: Users can read their own notifications
+    // Write: System and admins can create notifications
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated() && 
+                     request.auth.uid == resource.data.userId;
+      allow create: if isAuthenticated() && 
+                       (request.auth.uid == request.resource.data.userId || isAdmin());
+      allow update: if isAuthenticated() && 
+                       request.auth.uid == resource.data.userId;
+      allow delete: if isAuthenticated() && 
+                       (request.auth.uid == resource.data.userId || isAdmin());
+    }
   }
 }
 

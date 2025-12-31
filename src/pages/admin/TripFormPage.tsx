@@ -192,11 +192,21 @@ export function TripFormPage() {
    */
   const createMutation = useMutation({
     mutationFn: createTrip,
-    onSuccess: () => {
+    onSuccess: (trip) => {
+      // Invalidate all trip-related queries
       queryClient.invalidateQueries({ queryKey: ['adminTrips'] });
-      queryClient.invalidateQueries({ queryKey: ['trips'] }); // Invalidate trips cache for users
-      queryClient.invalidateQueries({ queryKey: ['trips', 'all'] }); // Invalidate trips filter cache
+      queryClient.invalidateQueries({ queryKey: ['trips'] });
+      queryClient.invalidateQueries({ queryKey: ['trips', 'all'] });
+      // Also refetch immediately for better UX
+      queryClient.refetchQueries({ queryKey: ['trips'] });
+      queryClient.refetchQueries({ queryKey: ['trips', 'all'] });
+      // Show success message
+      alert(`Sortie "${trip.title}" créée avec succès !`);
       navigate('/admin/trips');
+    },
+    onError: (error) => {
+      console.error('Error creating trip:', error);
+      alert(`Erreur lors de la création de la sortie: ${error.message}`);
     },
   });
 
@@ -272,62 +282,74 @@ export function TripFormPage() {
    * Handle submit
    */
   const handleSubmit = async (asDraft: boolean) => {
-    const formData = form.getValues();
-    
-    const tripData: TripFormData = {
-      title: formData.title,
-      shortDescription: formData.shortDescription,
-      description: formData.description,
-      category: formData.category,
-      tags: formData.tags,
-      startDate: formData.startDate,
-      endDate: formData.endDate,
-      meetingTime: formData.meetingTime,
-      meetingPoint: {
-        name: formData.meetingPointName,
-        coordinates: {
-          lat: formData.meetingPointLat,
-          lng: formData.meetingPointLng,
+    try {
+      const formData = form.getValues();
+      
+      // Validate form before submitting
+      const isValid = await form.trigger();
+      if (!isValid) {
+        alert('Veuillez remplir tous les champs requis');
+        return;
+      }
+      
+      const tripData: TripFormData = {
+        title: formData.title,
+        shortDescription: formData.shortDescription,
+        description: formData.description,
+        category: formData.category,
+        tags: formData.tags,
+        startDate: formData.startDate,
+        endDate: formData.endDate,
+        meetingTime: formData.meetingTime,
+        meetingPoint: {
+          name: formData.meetingPointName,
+          coordinates: {
+            lat: formData.meetingPointLat,
+            lng: formData.meetingPointLng,
+          },
         },
-      },
-      difficulty: formData.difficulty,
-      physicalLevel: formData.physicalLevel,
-      minAge: formData.minAge,
-      minParticipants: formData.minParticipants,
-      maxParticipants: formData.maxParticipants,
-      price: formData.price,
-      included: formData.included,
-      notIncluded: formData.notIncluded,
-      accommodation: formData.accommodation,
-      meals: formData.meals,
-      itinerary,
-      equipment,
-      images,
-      mainImage,
-      guide: {
-        name: '',
-        phone: '',
-      },
-      emergencyContact: {
-        name: '',
-        phone: '',
-      },
-      visible: formData.visible !== false, // Default to true if not set
-      enrollmentDeadline: formData.enrollmentDeadline,
-      freeCancellationDays: formData.freeCancellationDays,
-      cancellationRefund: formData.cancellationRefund,
-      autoConfirm: formData.autoConfirm,
-      status: asDraft ? 'upcoming' : (formData.status || 'upcoming'),
-    };
+        difficulty: formData.difficulty,
+        physicalLevel: formData.physicalLevel,
+        minAge: formData.minAge,
+        minParticipants: formData.minParticipants,
+        maxParticipants: formData.maxParticipants,
+        price: formData.price,
+        included: formData.included,
+        notIncluded: formData.notIncluded,
+        accommodation: formData.accommodation,
+        meals: formData.meals,
+        itinerary,
+        equipment,
+        images,
+        mainImage,
+        guide: {
+          name: '',
+          phone: '',
+        },
+        emergencyContact: {
+          name: '',
+          phone: '',
+        },
+        visible: formData.visible !== false, // Default to true if not set
+        enrollmentDeadline: formData.enrollmentDeadline,
+        freeCancellationDays: formData.freeCancellationDays,
+        cancellationRefund: formData.cancellationRefund,
+        autoConfirm: formData.autoConfirm,
+        status: asDraft ? 'upcoming' : (formData.status || 'upcoming'),
+      };
 
-    if (isEditMode && id) {
-      await updateMutation.mutateAsync({ tripId: id, data: tripData });
-    } else {
-      await createMutation.mutateAsync(tripData);
+      if (isEditMode && id) {
+        await updateMutation.mutateAsync({ tripId: id, data: tripData });
+      } else {
+        await createMutation.mutateAsync(tripData);
+      }
+
+      // Clear draft
+      localStorage.removeItem('tripFormDraft');
+    } catch (error) {
+      console.error('Error submitting trip:', error);
+      alert(`Erreur lors de la ${isEditMode ? 'mise à jour' : 'création'} de la sortie: ${(error as Error).message}`);
     }
-
-    // Clear draft
-    localStorage.removeItem('tripFormDraft');
   };
 
   if (loadingTrip) {
